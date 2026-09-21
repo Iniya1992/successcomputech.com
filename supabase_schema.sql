@@ -127,3 +127,9 @@ USING (true);
 -- SUPPORT FOR UP TO 4 PRODUCT IMAGES
 -- =========================================================================
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS images JSONB DEFAULT '[]'::jsonb;
+
+-- =========================================================================
+-- SUPPORT FOR RAZORPAY ONLINE PAYMENTS IN ORDERS
+-- =========================================================================
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_id TEXT DEFAULT '';
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'Pending';
