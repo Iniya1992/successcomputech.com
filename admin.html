@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal | Success Computech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Supabase CDN Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- AUTH CONTAINER (SHOWN WHEN LOGGED OUT) -->
+  <div id="authContainer" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-rose-950">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+      
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto shadow-lg shadow-rose-300 mb-3">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h1 class="text-2xl font-black text-gray-900">Admin Control Center</h1>
+        <p class="text-xs text-gray-500 mt-1">Success Computech • Protected Authentication</p>
+      </div>
+
+      <div id="configAlert" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        <strong>Setup Notice:</strong> Update <code>config.js</code> with your Supabase credentials to enable production auth. In local demo mode, any test login will authenticate you.
+      </div>
+
+      <form id="loginForm" onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Admin Email Address</label>
+          <div class="relative">
+            <input type="email" id="loginEmail" placeholder="admin@successcomputech.com" class="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:bg-white" required />
+            <i class="fa-solid fa-envelope absolute left-3 top-3 text-gray-400"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Password</label>
+          <div class="relative">
+            <input type="password" id="loginPassword" placeholder="••••••••••••" class="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:bg-white" required />
+            <i class="fa-solid fa-key absolute left-3 top-3 text-gray-400"></i>
+          </div>
+        </div>
+
+        <div id="loginError" class="hidden text-rose-600 font-bold text-[11px] p-2 bg-rose-50 rounded-lg"></div>
+
+        <button type="submit" id="loginSubmitBtn" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-rose-200 transition flex items-center justify-center gap-2">
+          <span>Sign In to Admin Panel</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-gray-100 text-center">
+        <a href="index.html" class="text-xs text-gray-500 hover:text-brand-600 font-medium">
+          <i class="fa-solid fa-arrow-left mr-1"></i> Return to Customer Storefront
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROTECTED ADMIN DASHBOARD (SHOWN ONLY WHEN LOGGED IN) -->
+  <div id="dashboardContainer" class="hidden flex-1 flex flex-col">
+    
+    <!-- Top Admin Header -->
+    <header class="bg-gray-900 text-white border-b border-gray-800 sticky top-0 z-30 shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center text-white text-base font-bold">
+            <i class="fa-solid fa-gift"></i>
+          </div>
+          <div>
+            <h2 class="font-extrabold text-sm sm:text-base leading-tight">Success Computech Admin</h2>
+            <p class="text-[10px] text-gray-400">Secure Database Connected</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <span class="hidden sm:inline text-xs text-gray-300 font-medium" id="adminUserEmail">admin@successcomputech.com</span>
+          <a href="index.html" target="_blank" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Storefront
+          </a>
+          <button onclick="handleAdminLogout()" class="text-xs bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white px-3 py-1.5 rounded-lg border border-rose-500/30 transition flex items-center gap-1.5 font-bold">
+            <i class="fa-solid fa-arrow-right-from-bracket text-[10px]"></i> Sign Out
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+      
+      <!-- KPI Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <p class="text-xs font-semibold text-gray-500 uppercase">Total Products</p>
+          <p class="text-2xl font-black text-gray-900 mt-2" id="statProducts">0</p>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1"><i class="fa-solid fa-check-circle mr-1"></i>In Database</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <p class="text-xs font-semibold text-gray-500 uppercase">Total Orders</p>
+          <p class="text-2xl font-black text-gray-900 mt-2" id="statOrders">0</p>
+          <p class="text-[11px] text-gray-500 font-medium mt-1">Recorded via Store</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <p class="text-xs font-semibold text-gray-500 uppercase">Store Revenue</p>
+          <p class="text-2xl font-black text-gray-900 mt-2" id="statRevenue">₹0</p>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1">Order Volume</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <p class="text-xs font-semibold text-gray-500 uppercase">WhatsApp Studio</p>
+          <p class="text-sm font-black text-gray-900 mt-2 truncate" id="statPhone">+91 9876543210</p>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1"><i class="fa-brands fa-whatsapp mr-1"></i>Active Orders</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center space-x-2 border-b border-gray-200 mb-6">
+        <button onclick="switchTab('products')" id="tabBtn-products" class="tab-btn active px-4 py-3 font-bold text-xs sm:text-sm text-brand-600 border-b-2 border-brand-600 flex items-center gap-2">
+          <i class="fa-solid fa-boxes-stacked"></i> Products Catalog (<span id="tabCountProducts">0</span>)
+        </button>
+        <button onclick="switchTab('orders')" id="tabBtn-orders" class="tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-list"></i> Customer Orders (<span id="tabCountOrders">0</span>)
+        </button>
+        <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
+          <i class="fa-solid fa-gear"></i> Store Settings
+        </button>
+      </div>
+
+      <!-- TAB 1: PRODUCTS -->
+      <div id="tab-products" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+          <input type="text" id="adminSearchProd" oninput="filterAdminProducts()" placeholder="Filter product by title or category..." class="px-3.5 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs w-72 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+          <button onclick="openProductModal('add')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+            <i class="fa-solid fa-plus"></i> Add New Gift Item
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="py-3.5 px-4">Item</th>
+                  <th class="py-3.5 px-4">Category</th>
+                  <th class="py-3.5 px-4">Price (Offer / MRP)</th>
+                  <th class="py-3.5 px-4">Occasion</th>
+                  <th class="py-3.5 px-4">Badge</th>
+                  <th class="py-3.5 px-4">Status</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductTable" class="divide-y divide-gray-100">
+                <!-- Products injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ORDERS -->
+      <div id="tab-orders" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+            <div>
+              <h4 class="font-bold text-sm text-gray-800">Recorded Customer Orders</h4>
+              <p class="text-[11px] text-gray-500">Live order entries from customers</p>
+            </div>
+            <button onclick="refreshOrders()" class="text-xs text-brand-600 hover:text-brand-700 font-bold">
+              <i class="fa-solid fa-rotate-right mr-1"></i> Refresh
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="py-3.5 px-4">Order Code & Date</th>
+                  <th class="py-3.5 px-4">Customer Details</th>
+                  <th class="py-3.5 px-4">Items & Customization</th>
+                  <th class="py-3.5 px-4">Total</th>
+                  <th class="py-3.5 px-4">Fulfillment Status</th>
+                  <th class="py-3.5 px-4 text-right">Contact</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrderTable" class="divide-y divide-gray-100">
+                <!-- Orders injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: SETTINGS -->
+      <div id="tab-settings" class="hidden">
+        <div class="max-w-3xl bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">Storefront & WhatsApp Settings</h3>
+            <p class="text-xs text-gray-500">Changes here instantly update the live customer website and order destinations.</p>
+          </div>
+
+          <form id="settingsForm" onsubmit="saveStoreSettings(event)" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">Company / Brand Name</label>
+                <input type="text" id="setBrandName" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+              </div>
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">Brand Tagline</label>
+                <input type="text" id="setTagline" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">WhatsApp Business Number (with 91 country code)</label>
+                <input type="text" id="setWhatsapp" placeholder="919876543210" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+                <span class="text-[10px] text-gray-400">All customer WhatsApp orders redirect to this number.</span>
+              </div>
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">UPI ID for Direct Payments</label>
+                <input type="text" id="setUpiId" placeholder="successcomputech@upi" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Store / Studio Address</label>
+              <textarea id="setAddress" rows="2" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500"></textarea>
+            </div>
+
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Announcement Bar Text</label>
+              <input type="text" id="setAnnouncement" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-end">
+              <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm transition">
+                Save Store Settings
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT PRODUCT -->
+  <div id="productEditModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="font-bold text-base text-gray-900" id="prodModalTitle">Add New Gift Product</h3>
+        <button onclick="closeProductModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="adminProductForm" onsubmit="saveProduct(event)" class="p-5 overflow-y-auto space-y-4 text-xs">
+        <input type="hidden" id="editProdId" />
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Product Title</label>
+          <input type="text" id="prodTitle" placeholder="e.g. Acrylic Spotify Scan Frame" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Category</label>
+            <select id="prodCategory" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
+              <option value="Acrylic">Acrylic Frames</option>
+              <option value="Frames">Photo Frames</option>
+              <option value="Mugs">Personalized Mugs</option>
+              <option value="Keychains">Custom Keychains</option>
+              <option value="Hampers">Gift Hampers</option>
+              <option value="Puzzles">Photo Puzzles</option>
+              <option value="Lighting">Lamps & Light Stands</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Occasion / Theme</label>
+            <select id="prodOccasion" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
+              <option value="All">All Occasions</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Anniversary">Anniversary</option>
+              <option value="Love">Love & Valentine</option>
+              <option value="Friends">Friends & Family</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Offer Price (₹)</label>
+            <input type="number" id="prodPrice" placeholder="599" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Original MRP (₹)</label>
+            <input type="number" id="prodMRP" placeholder="899" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Image URL</label>
+          <input type="url" id="prodImage" placeholder="https://images.unsplash.com/..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Badge Tag</label>
+          <input type="text" id="prodBadge" placeholder="e.g. Bestseller, 40% OFF" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Description</label>
+          <textarea id="prodDesc" rows="3" placeholder="Specifications, dimensions, acrylic grade..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="prodInStock" class="w-4 h-4 text-brand-600 rounded" checked />
+          <label for="prodInStock" class="font-bold text-gray-700">Item is in stock and visible to customers</label>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeProductModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-sm">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: SUPABASE AUTH & ADMIN ACTIONS -->
+  <script>
+    let adminState = {
+      user: null,
+      activeTab: 'products',
+      products: [],
+      orders: [],
+      settings: {}
+    };
+
+    async function initAdminApp() {
+      // Check if Supabase configured
+      if (!supabaseClient) {
+        document.getElementById('configAlert').classList.remove('hidden');
+      }
+
+      // Check existing Supabase session
+      if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+          adminState.user = session.user;
+          showDashboard();
+          return;
+        }
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (session) {
+            adminState.user = session.user;
+            showDashboard();
+          } else {
+            adminState.user = null;
+            showAuth();
+          }
+        });
+      } else {
+        // Check local demo session
+        const demoAuth = sessionStorage.getItem('sc_demo_auth');
+        if (demoAuth) {
+          adminState.user = { email: demoAuth };
+          showDashboard();
+        } else {
+          showAuth();
+        }
+      }
+    }
+
+    function showAuth() {
+      document.getElementById('authContainer').classList.remove('hidden');
+      document.getElementById('dashboardContainer').classList.add('hidden');
+    }
+
+    function showDashboard() {
+      document.getElementById('authContainer').classList.add('hidden');
+      document.getElementById('dashboardContainer').classList.remove('hidden');
+      if (adminState.user) {
+        document.getElementById('adminUserEmail').textContent = adminState.user.email;
+      }
+      loadAdminData();
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const errBox = document.getElementById('loginError');
+      errBox.classList.add('hidden');
+
+      if (supabaseClient) {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          errBox.textContent = error.message;
+          errBox.classList.remove('hidden');
+        } else {
+          adminState.user = data.user;
+          showDashboard();
+        }
+      } else {
+        // Fallback demo login
+        sessionStorage.setItem('sc_demo_auth', email);
+        adminState.user = { email };
+        showDashboard();
+      }
+    }
+
+    async function handleAdminLogout() {
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
+      sessionStorage.removeItem('sc_demo_auth');
+      adminState.user = null;
+      showAuth();
+    }
+
+    // Tabs
+    function switchTab(tabName) {
+      adminState.activeTab = tabName;
+      ['products', 'orders', 'settings'].forEach(t => {
+        const content = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabName) {
+          content.classList.remove('hidden');
+          btn.classList.add('active', 'text-brand-600', 'border-brand-600');
+          btn.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          content.classList.add('hidden');
+          btn.classList.remove('active', 'text-brand-600', 'border-brand-600');
+          btn.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+    }
+
+    // Load Data
+    async function loadAdminData() {
+      if (supabaseClient) {
+        try {
+          const { data: prods } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+          if (prods) adminState.products = prods;
+
+          const { data: ords } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
+          if (ords) adminState.orders = ords;
+
+          const { data: setts } = await supabaseClient.from('store_settings').select('*').single();
+          if (setts) adminState.settings = setts;
+        } catch (err) {
+          console.warn('Error fetching Supabase admin data', err);
+        }
+      } else {
+        // Load from local storage demo
+        const sp = localStorage.getItem('sc_products');
+        adminState.products = sp ? JSON.parse(sp) : [];
+        const so = localStorage.getItem('sc_orders');
+        adminState.orders = so ? JSON.parse(so) : [];
+        const ss = localStorage.getItem('sc_settings');
+        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919876543210', address: 'Tiruppur' };
+      }
+
+      updateKPIs();
+      renderProductTable(adminState.products);
+      renderOrderTable();
+      populateSettingsForm();
+    }
+
+    function updateKPIs() {
+      document.getElementById('statProducts').textContent = adminState.products.length;
+      document.getElementById('statOrders').textContent = adminState.orders.length;
+      document.getElementById('tabCountProducts').textContent = adminState.products.length;
+      document.getElementById('tabCountOrders').textContent = adminState.orders.length;
+
+      const rev = adminState.orders.reduce((acc, o) => acc + Number(o.total_amount || o.total || 0), 0);
+      document.getElementById('statRevenue').textContent = `₹${rev.toLocaleString('en-IN')}`;
+      if (adminState.settings.whatsapp) {
+        document.getElementById('statPhone').textContent = `+${adminState.settings.whatsapp}`;
+      }
+    }
+
+    // Products Management
+    function renderProductTable(list) {
+      const tbody = document.getElementById('adminProductTable');
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-400">No products found. Add your first gift item!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => `
+        <tr class="hover:bg-gray-50/70 transition">
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-3">
+              <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover border border-gray-200" alt="" />
+              <div>
+                <p class="font-bold text-gray-900">${p.title}</p>
+                <p class="text-[10px] text-gray-400">ID: ${p.id}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-4 font-semibold text-gray-700">${p.category}</td>
+          <td class="py-3 px-4">
+            <span class="font-bold text-gray-900">₹${p.price}</span>
+            <span class="text-gray-400 line-through text-[10px] ml-1">₹${p.mrp}</span>
+          </td>
+          <td class="py-3 px-4 font-medium">${p.occasion || 'All'}</td>
+          <td class="py-3 px-4">
+            ${p.badge ? `<span class="bg-rose-100 text-brand-700 px-2 py-0.5 rounded text-[10px] font-bold">${p.badge}</span>` : '<span class="text-gray-400">—</span>'}
+          </td>
+          <td class="py-3 px-4">
+            <button onclick="toggleProductStock('${p.id}', ${!p.in_stock})" class="inline-flex items-center gap-1 font-semibold ${p.in_stock ? 'text-emerald-600' : 'text-rose-600'}">
+              <span class="w-2 h-2 rounded-full ${p.in_stock ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+              ${p.in_stock ? 'In Stock' : 'Out of Stock'}
+            </button>
+          </td>
+          <td class="py-3 px-4 text-right space-x-1">
+            <button onclick="openProductModal('edit', '${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-blue-600 font-bold" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="deleteProduct('${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-rose-600 font-bold" title="Delete">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterAdminProducts() {
+      const q = document.getElementById('adminSearchProd').value.toLowerCase().trim();
+      const filtered = adminState.products.filter(p => 
+        p.title.toLowerCase().includes(q) || 
+        p.category.toLowerCase().includes(q)
+      );
+      renderProductTable(filtered);
+    }
+
+    function openProductModal(mode, prodId = null) {
+      const modal = document.getElementById('productEditModal');
+      const title = document.getElementById('prodModalTitle');
+      const form = document.getElementById('adminProductForm');
+
+      if (mode === 'edit' && prodId) {
+        const p = adminState.products.find(item => item.id == prodId);
+        if (!p) return;
+        title.textContent = 'Edit Gift Product';
+        document.getElementById('editProdId').value = p.id;
+        document.getElementById('prodTitle').value = p.title;
+        document.getElementById('prodCategory').value = p.category;
+        document.getElementById('prodOccasion').value = p.occasion || 'All';
+        document.getElementById('prodPrice').value = p.price;
+        document.getElementById('prodMRP').value = p.mrp;
+        document.getElementById('prodImage').value = p.image;
+        document.getElementById('prodBadge').value = p.badge || '';
+        document.getElementById('prodDesc').value = p.description || '';
+        document.getElementById('prodInStock').checked = p.in_stock !== false;
+      } else {
+        title.textContent = 'Add New Gift Product';
+        form.reset();
+        document.getElementById('editProdId').value = '';
+        document.getElementById('prodImage').value = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
+        document.getElementById('prodInStock').checked = true;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productEditModal').classList.add('hidden');
+    }
+
+    async function saveProduct(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editProdId').value;
+
+      const payload = {
+        title: document.getElementById('prodTitle').value.trim(),
+        category: document.getElementById('prodCategory').value,
+        occasion: document.getElementById('prodOccasion').value,
+        price: Number(document.getElementById('prodPrice').value),
+        mrp: Number(document.getElementById('prodMRP').value),
+        image: document.getElementById('prodImage').value.trim(),
+        badge: document.getElementById('prodBadge').value.trim(),
+        description: document.getElementById('prodDesc').value.trim(),
+        in_stock: document.getElementById('prodInStock').checked
+      };
+
+      if (supabaseClient) {
+        if (editId) {
+          const { error } = await supabaseClient.from('products').update(payload).eq('id', editId);
+          if (error) { alert('Error updating product: ' + error.message); return; }
+        } else {
+          const { error } = await supabaseClient.from('products').insert([payload]);
+          if (error) { alert('Error inserting product: ' + error.message); return; }
+        }
+      } else {
+        if (editId) {
+          const idx = adminState.products.findIndex(p => p.id == editId);
+          if (idx !== -1) adminState.products[idx] = { ...adminState.products[idx], ...payload };
+        } else {
+          adminState.products.unshift({ id: 'p_' + Date.now(), ...payload });
+        }
+        localStorage.setItem('sc_products', JSON.stringify(adminState.products));
+      }
+
+      closeProductModal();
+      loadAdminData();
+      alert('Product saved successfully!');
+    }
+
+    async function toggleProductStock(prodId, newStatus) {
+      if (supabaseClient) {
+        await supabaseClient.from('products').update({ in_stock: newStatus }).eq('id', prodId);
+      } else {
+        const p = adminState.products.find(item => item.id == prodId);
+        if (p) p.in_stock = newStatus;
+        localStorage.setItem('sc_products', JSON.stringify(adminState.products));
+      }
+      loadAdminData();
+    }
+
+    async function deleteProduct(prodId) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      if (supabaseClient) {
+        await supabaseClient.from('products').delete().eq('id', prodId);
+      } else {
+        adminState.products = adminState.products.filter(p => p.id != prodId);
+        localStorage.setItem('sc_products', JSON.stringify(adminState.products));
+      }
+      loadAdminData();
+    }
+
+    // Orders Management
+    function renderOrderTable() {
+      const tbody = document.getElementById('adminOrderTable');
+      if (adminState.orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400">No customer orders recorded yet. Incoming orders from customer cart/WhatsApp flow will appear here.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = adminState.orders.map(o => {
+        const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : (o.date || 'Recent');
+        const items = Array.isArray(o.items) ? o.items : [];
+        return `
+          <tr class="hover:bg-gray-50/70 transition">
+            <td class="py-3 px-4">
+              <p class="font-bold text-gray-900">${o.order_code || o.orderId || 'Order'}</p>
+              <p class="text-[10px] text-gray-400">${orderDate}</p>
+            </td>
+            <td class="py-3 px-4">
+              <p class="font-bold text-gray-800">${o.customer_name || o.customerName || 'Customer'}</p>
+              <p class="text-[10px] text-gray-500">${o.customer_phone || o.phone || '-'}</p>
+              <p class="text-[10px] text-gray-400 truncate max-w-xs">${o.delivery_address || o.address || '-'}</p>
+            </td>
+            <td class="py-3 px-4">
+              <div class="space-y-1">
+                ${items.map(it => `
+                  <div class="text-[11px]">
+                    <span class="font-semibold text-gray-800">• ${it.title}</span>
+                    ${it.customName ? `<span class="text-gray-500"> [Name: ${it.customName}]</span>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </td>
+            <td class="py-3 px-4 font-black text-brand-600">₹${o.total_amount || o.total || 0}</td>
+            <td class="py-3 px-4">
+              <select onchange="updateOrderStatus('${o.id || o.orderId}', this.value)" class="bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 font-bold focus:ring-1 focus:ring-brand-500">
+                <option value="Order Placed" ${o.status === 'Order Placed' ? 'selected' : ''}>⏳ Order Placed</option>
+                <option value="Photo Received" ${o.status === 'Photo Received' ? 'selected' : ''}>📷 Photo Received</option>
+                <option value="In Production" ${o.status === 'In Production' ? 'selected' : ''}>🖨️ In Production</option>
+                <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
+              </select>
+            </td>
+            <td class="py-3 px-4 text-right">
+              ${(o.customer_phone || o.phone) ? `
+                <a href="https://wa.me/${(o.customer_phone || o.phone).replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(o.customer_name || '')},%20regarding%20your%20custom%20gift%20order%20at%20Success%20Computech..." target="_blank" class="text-emerald-600 hover:text-emerald-700 font-bold p-1">
+                  <i class="fa-brands fa-whatsapp text-base"></i>
+                </a>
+              ` : '—'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      if (supabaseClient) {
+        await supabaseClient.from('orders').update({ status: newStatus }).eq('id', orderId);
+      } else {
+        const o = adminState.orders.find(item => (item.id || item.orderId) == orderId);
+        if (o) o.status = newStatus;
+        localStorage.setItem('sc_orders', JSON.stringify(adminState.orders));
+      }
+      loadAdminData();
+    }
+
+    function refreshOrders() {
+      loadAdminData();
+    }
+
+    // Settings Management
+    function populateSettingsForm() {
+      const s = adminState.settings;
+      if (s.brand_name) document.getElementById('setBrandName').value = s.brand_name;
+      if (s.brand_tagline) document.getElementById('setTagline').value = s.brand_tagline;
+      if (s.whatsapp) document.getElementById('setWhatsapp').value = s.whatsapp;
+      if (s.upi_id) document.getElementById('setUpiId').value = s.upi_id;
+      if (s.address) document.getElementById('setAddress').value = s.address;
+      if (s.announcement) document.getElementById('setAnnouncement').value = s.announcement;
+    }
+
+    async function saveStoreSettings(e) {
+      e.preventDefault();
+      const payload = {
+        brand_name: document.getElementById('setBrandName').value.trim(),
+        brand_tagline: document.getElementById('setTagline').value.trim(),
+        whatsapp: document.getElementById('setWhatsapp').value.trim(),
+        upi_id: document.getElementById('setUpiId').value.trim(),
+        address: document.getElementById('setAddress').value.trim(),
+        announcement: document.getElementById('setAnnouncement').value.trim()
+      };
+
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('store_settings').update(payload).eq('id', 1);
+        if (error) { alert('Error updating settings: ' + error.message); return; }
+      } else {
+        adminState.settings = payload;
+        localStorage.setItem('sc_settings', JSON.stringify(payload));
+      }
+
+      loadAdminData();
+      alert('Store settings saved successfully!');
+    }
+
+    window.addEventListener('DOMContentLoaded', initAdminApp);
+  </script>
+</body>
+</html>
