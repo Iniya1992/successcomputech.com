@@ -122,3 +122,8 @@ CREATE POLICY "Admins can update store settings"
 ON public.store_settings FOR UPDATE 
 TO authenticated 
 USING (true);
+
+-- =========================================================================
+-- SUPPORT FOR UP TO 4 PRODUCT IMAGES
+-- =========================================================================
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS images JSONB DEFAULT '[]'::jsonb;

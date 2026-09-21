@@ -94,7 +94,7 @@
         <!-- Action Buttons -->
         <div class="flex items-center space-x-3 sm:space-x-4">
           <!-- WhatsApp Direct Contact -->
-          <a id="navWhatsappBtn" href="https://wa.me/919944444834" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
+          <a id="navWhatsappBtn" href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
             <i class="fa-brands fa-whatsapp text-base"></i>
             <span class="hidden sm:inline">WhatsApp Order</span>
             <span class="sm:hidden">Chat</span>
@@ -358,9 +358,13 @@
 
       <div class="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 h-56 sm:h-64 relative">
-            <img id="modalProductImage" src="" alt="" class="w-full h-full object-cover" />
-            <span id="modalProductBadge" class="absolute top-2.5 left-2.5 bg-brand-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Bestseller</span>
+          <div>
+            <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 h-56 sm:h-64 relative">
+              <img id="modalProductImage" src="" alt="" class="w-full h-full object-cover transition duration-300" />
+              <span id="modalProductBadge" class="absolute top-2.5 left-2.5 bg-brand-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Bestseller</span>
+            </div>
+            <!-- Thumbnails Gallery for up to 4 images -->
+            <div id="modalThumbnails" class="flex items-center gap-2 mt-2.5 overflow-x-auto no-scrollbar py-0.5"></div>
           </div>
 
           <div class="space-y-3">
@@ -492,7 +496,7 @@
           </p>
           <div class="flex items-center space-x-3 text-gray-400 text-base pt-2">
             <a href="#" class="hover:text-rose-400"><i class="fa-brands fa-instagram"></i></a>
-            <a id="footerWaIcon" href="https://wa.me/919944444834" target="_blank" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="footerWaIcon" href="https://wa.me/919876543210" target="_blank" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
 
@@ -523,7 +527,7 @@
           <p class="text-gray-400 mt-2">WhatsApp Order: <span id="footerPhone" class="text-emerald-400 font-bold">+91 98765 43210</span></p>
           <div class="mt-4 p-3 rounded-xl bg-gray-800/80 border border-gray-700">
             <p class="text-[11px] text-gray-300 font-semibold">Need urgent customization for an anniversary or birthday?</p>
-            <a id="footerDirectWa" href="https://wa.me/919944444834" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
+            <a id="footerDirectWa" href="https://wa.me/919876543210" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
               <i class="fa-brands fa-whatsapp mr-1"></i> Send Instant Message
             </a>
           </div>
@@ -555,7 +559,7 @@
     const DEFAULT_SETTINGS = {
       brand_name: 'Success Computech',
       brand_tagline: 'Personalized Gifts • Photo Restoration • Tiruppur',
-      whatsapp: '919944444834',
+      whatsapp: '919876543210',
       upi_id: 'successcomputech@upi',
       address: 'Success Computech, Tiruppur, Tamil Nadu - 641604',
       announcement: '🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.'
@@ -612,7 +616,11 @@
           state.products = [...DEFAULT_FALLBACK_PRODUCTS];
         }
       } else {
-        state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+        const localProds = localStorage.getItem('sc_products');
+        state.products = localProds ? JSON.parse(localProds) : [...DEFAULT_FALLBACK_PRODUCTS];
+        const localSetts = localStorage.getItem('sc_settings');
+        if (localSetts) state.settings = JSON.parse(localSetts);
+        applySettingsToUI();
       }
 
       // Load cart from session/local storage
@@ -747,12 +755,17 @@
       empty.classList.add('hidden');
       grid.innerHTML = filtered.map(product => {
         const discount = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+        const imagesList = (product.images && Array.isArray(product.images) && product.images.length > 0) ? product.images : (product.image ? [product.image] : []);
+        const coverImg = imagesList[0] || product.image;
+        const photoBadge = imagesList.length > 1 ? `<span class="bg-black/60 backdrop-blur text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm"><i class="fa-solid fa-images text-[8px]"></i>${imagesList.length} Photos</span>` : '';
+
         return `
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
             <div class="relative h-44 sm:h-52 bg-gray-100 overflow-hidden cursor-pointer" onclick="openProductCustomizer('${product.id}')">
-              <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              <img src="${coverImg}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
               <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
                 ${product.badge ? `<span class="bg-brand-600 text-white text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-0.5 rounded-full shadow-sm">${product.badge}</span>` : ''}
+                ${photoBadge}
               </div>
               <span class="absolute bottom-2.5 right-2.5 bg-white/90 backdrop-blur text-gray-800 text-[11px] font-bold px-2 py-0.5 rounded-lg shadow-sm">
                 ${discount}% OFF
@@ -797,8 +810,11 @@
       if (!p) return;
       state.currentSelectedProduct = p;
 
+      const imagesList = (p.images && Array.isArray(p.images) && p.images.length > 0) ? p.images : (p.image ? [p.image] : []);
+      const mainImg = document.getElementById('modalProductImage');
+      mainImg.src = imagesList[0] || p.image;
+
       document.getElementById('modalProductTitle').textContent = p.title;
-      document.getElementById('modalProductImage').src = p.image;
       document.getElementById('modalProductPrice').textContent = `₹${p.price}`;
       document.getElementById('modalProductOriginalPrice').textContent = `₹${p.mrp}`;
       document.getElementById('modalFooterPrice').textContent = `₹${p.price}`;
@@ -808,11 +824,37 @@
       const discount = Math.round(((p.mrp - p.price) / p.mrp) * 100);
       document.getElementById('modalDiscountPct').textContent = `${discount}% OFF`;
 
+      // Render thumbnail selector if multiple photos
+      const thumbContainer = document.getElementById('modalThumbnails');
+      if (imagesList.length > 1) {
+        thumbContainer.classList.remove('hidden');
+        thumbContainer.innerHTML = imagesList.map((imgUrl, i) => `
+          <button type="button" onclick="switchModalMainImage('${imgUrl.replace(/'/g, "\\'")}', this)" class="modal-thumb flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden border-2 ${i === 0 ? 'border-brand-600 ring-2 ring-rose-200' : 'border-gray-200'} transition hover:border-brand-500">
+            <img src="${imgUrl}" class="w-full h-full object-cover" />
+          </button>
+        `).join('');
+      } else {
+        thumbContainer.classList.add('hidden');
+        thumbContainer.innerHTML = '';
+      }
+
       document.getElementById('custNameInput').value = '';
       document.getElementById('custSongInput').value = '';
       document.getElementById('custNoteInput').value = '';
 
       document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function switchModalMainImage(newSrc, btnEl) {
+      document.getElementById('modalProductImage').src = newSrc;
+      document.querySelectorAll('.modal-thumb').forEach(b => {
+        b.classList.remove('border-brand-600', 'ring-2', 'ring-rose-200');
+        b.classList.add('border-gray-200');
+      });
+      if (btnEl) {
+        btnEl.classList.remove('border-gray-200');
+        btnEl.classList.add('border-brand-600', 'ring-2', 'ring-rose-200');
+      }
     }
 
     function closeProductModal() {

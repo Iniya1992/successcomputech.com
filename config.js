@@ -1,13 +1,10 @@
 // =========================================================================
 // SUCCESS COMPUTECH - SUPABASE CONFIGURATION
-// Paste your Supabase Project URL and Public Anon Key here from:
-// Supabase Dashboard -> Settings -> API
 // =========================================================================
 
 const SUPABASE_CONFIG = {
-  // Replace with your project details:
- url: 'https://lucreiiulmgboxhegkea.supabase.co',
-  anonKey:'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e'
+  url: 'https://lucreiiulmgboxhegkea.supabase.co',
+  anonKey: 'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e'
 };
 
 // Initialize Supabase Client

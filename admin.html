@@ -328,9 +328,31 @@
           </div>
         </div>
 
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Image URL</label>
-          <input type="url" id="prodImage" placeholder="https://images.unsplash.com/..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+        <!-- MULTI-IMAGE UPLOAD SECTION (UP TO 4 IMAGES) -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-gray-700 block">Product Images (Upload up to 4 Photos)</label>
+            <span class="text-[11px] font-bold text-brand-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200" id="imageCountLabel">0 / 4 Photos</span>
+          </div>
+
+          <!-- Drag and Drop / File Input Box -->
+          <div class="border-2 border-dashed border-rose-300 hover:border-brand-500 rounded-2xl p-4 text-center bg-rose-50/40 hover:bg-rose-50/80 transition cursor-pointer" onclick="document.getElementById('prodFileInput').click()">
+            <input type="file" id="prodFileInput" accept="image/*" multiple onchange="handleAdminImageUpload(event)" class="hidden" />
+            <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-600 mb-1"></i>
+            <p class="text-xs font-bold text-gray-800">Click to Select Photos from Device</p>
+            <p class="text-[10px] text-gray-500">Choose up to 4 photos (JPG, PNG, WebP). Automatic client-side compression.</p>
+          </div>
+
+          <!-- Thumbnail Grid (Up to 4 images) -->
+          <div id="imagePreviewsContainer" class="grid grid-cols-4 gap-2.5 pt-1">
+            <!-- Injected via JavaScript -->
+          </div>
+
+          <!-- Manual URL fallback input -->
+          <div class="pt-1 flex items-center gap-2">
+            <input type="url" id="prodImageManual" placeholder="Or paste image URL link..." class="flex-1 p-2 bg-gray-50 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-brand-500" />
+            <button type="button" onclick="addManualImageUrl()" class="px-3.5 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl text-xs font-bold text-gray-700 transition">Add URL</button>
+          </div>
         </div>
 
         <div>
@@ -485,11 +507,22 @@
       } else {
         // Load from local storage demo
         const sp = localStorage.getItem('sc_products');
-        adminState.products = sp ? JSON.parse(sp) : [];
+        if (sp) {
+          adminState.products = JSON.parse(sp);
+        } else {
+          // Initialize with default products
+          adminState.products = [
+            { id: 'p1', title: 'Spotify Acrylic LED Frame with Custom Scannable Song', category: 'Acrylic', occasion: 'Love', price: 599, mrp: 899, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80', description: 'Premium crystal-clear 4mm acrylic with wooden LED base.', in_stock: true },
+            { id: 'p2', title: 'Customized Wooden Moon Lamp Frame', category: 'Lighting', occasion: 'Anniversary', price: 490, mrp: 799, badge: 'Trending', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80', description: 'Romantic lunar lamp texture with customized photo.', in_stock: true },
+            { id: 'p3', title: 'Personalized A4 Couple Photo Puzzle Frame', category: 'Puzzles', occasion: 'Anniversary', price: 299, mrp: 650, badge: 'Fun Gift', image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=600&q=80', description: 'Interactive 120-piece puzzle printed with HD photo.', in_stock: true },
+            { id: 'p4', title: 'Calendar Mug with Birthday Photo & Tamil / English Date', category: 'Mugs', occasion: 'Birthday', price: 349, mrp: 425, badge: 'Popular', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', description: 'Glossy ceramic mug with calendar mark.', in_stock: true }
+          ];
+          localStorage.setItem('sc_products', JSON.stringify(adminState.products));
+        }
         const so = localStorage.getItem('sc_orders');
         adminState.orders = so ? JSON.parse(so) : [];
         const ss = localStorage.getItem('sc_settings');
-        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919876543210', address: 'Tiruppur' };
+        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919876543210', address: 'Success Computech, Tiruppur' };
       }
 
       updateKPIs();
@@ -566,6 +599,107 @@
       renderProductTable(filtered);
     }
 
+    let uploadedImages = []; // Stores up to 4 images (data-URLs or image links)
+
+    function handleAdminImageUpload(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length) return;
+
+      const remainingSlots = 4 - uploadedImages.length;
+      if (remainingSlots <= 0) {
+        alert('Maximum 4 images allowed per product. Please delete an image first.');
+        return;
+      }
+
+      const filesToProcess = files.slice(0, remainingSlots);
+
+      filesToProcess.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 900;
+            const MAX_HEIGHT = 900;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            if (uploadedImages.length < 4) {
+              uploadedImages.push(compressedDataUrl);
+              renderImageThumbnails();
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      event.target.value = '';
+    }
+
+    function addManualImageUrl() {
+      const input = document.getElementById('prodImageManual');
+      const url = input.value.trim();
+      if (!url) return;
+      if (uploadedImages.length >= 4) {
+        alert('Maximum 4 images allowed per product. Remove one first.');
+        return;
+      }
+      uploadedImages.push(url);
+      input.value = '';
+      renderImageThumbnails();
+    }
+
+    function removeUploadedImage(index) {
+      uploadedImages.splice(index, 1);
+      renderImageThumbnails();
+    }
+
+    function renderImageThumbnails() {
+      const container = document.getElementById('imagePreviewsContainer');
+      const countLabel = document.getElementById('imageCountLabel');
+      countLabel.textContent = `${uploadedImages.length} / 4 Photos`;
+
+      if (uploadedImages.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-4 py-2.5 text-center text-gray-400 text-[11px] bg-gray-50 border border-gray-200 rounded-xl">
+            No photos selected yet. Please upload 1 to 4 photos.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = uploadedImages.map((imgSrc, idx) => `
+        <div class="relative group rounded-xl overflow-hidden border-2 ${idx === 0 ? 'border-brand-600 shadow-sm' : 'border-gray-200'} bg-gray-100 h-20 sm:h-24">
+          <img src="${imgSrc}" class="w-full h-full object-cover" />
+          <span class="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+            ${idx === 0 ? 'Cover' : `Photo ${idx + 1}`}
+          </span>
+          <button type="button" onclick="removeUploadedImage(${idx})" class="absolute top-1 right-1 w-5 h-5 bg-rose-600 text-white rounded-full flex items-center justify-center text-[10px] shadow hover:bg-rose-700 transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
     function openProductModal(mode, prodId = null) {
       const modal = document.getElementById('productEditModal');
       const title = document.getElementById('prodModalTitle');
@@ -581,16 +715,26 @@
         document.getElementById('prodOccasion').value = p.occasion || 'All';
         document.getElementById('prodPrice').value = p.price;
         document.getElementById('prodMRP').value = p.mrp;
-        document.getElementById('prodImage').value = p.image;
         document.getElementById('prodBadge').value = p.badge || '';
         document.getElementById('prodDesc').value = p.description || '';
         document.getElementById('prodInStock').checked = p.in_stock !== false;
+
+        // Load images
+        if (p.images && Array.isArray(p.images) && p.images.length > 0) {
+          uploadedImages = [...p.images];
+        } else if (p.image) {
+          uploadedImages = [p.image];
+        } else {
+          uploadedImages = [];
+        }
+        renderImageThumbnails();
       } else {
         title.textContent = 'Add New Gift Product';
         form.reset();
         document.getElementById('editProdId').value = '';
-        document.getElementById('prodImage').value = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
         document.getElementById('prodInStock').checked = true;
+        uploadedImages = [];
+        renderImageThumbnails();
       }
 
       modal.classList.remove('hidden');
@@ -604,13 +748,19 @@
       e.preventDefault();
       const editId = document.getElementById('editProdId').value;
 
+      if (uploadedImages.length === 0) {
+        alert('Please upload at least 1 photo (up to 4 photos) for this product.');
+        return;
+      }
+
       const payload = {
         title: document.getElementById('prodTitle').value.trim(),
         category: document.getElementById('prodCategory').value,
         occasion: document.getElementById('prodOccasion').value,
         price: Number(document.getElementById('prodPrice').value),
         mrp: Number(document.getElementById('prodMRP').value),
-        image: document.getElementById('prodImage').value.trim(),
+        image: uploadedImages[0],
+        images: uploadedImages,
         badge: document.getElementById('prodBadge').value.trim(),
         description: document.getElementById('prodDesc').value.trim(),
         in_stock: document.getElementById('prodInStock').checked
