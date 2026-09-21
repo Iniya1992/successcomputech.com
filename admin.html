@@ -768,11 +768,24 @@
 
       if (supabaseClient) {
         if (editId) {
-          const { error } = await supabaseClient.from('products').update(payload).eq('id', editId);
-          if (error) { alert('Error updating product: ' + error.message); return; }
+          let res = await supabaseClient.from('products').update(payload).eq('id', editId);
+          if (res.error && res.error.message.includes("'images' column")) {
+            const fallbackPayload = { ...payload };
+            delete fallbackPayload.images;
+            res = await supabaseClient.from('products').update(fallbackPayload).eq('id', editId);
+          }
+          if (res.error) { alert('Error updating product: ' + res.error.message); return; }
         } else {
-          const { error } = await supabaseClient.from('products').insert([payload]);
-          if (error) { alert('Error inserting product: ' + error.message); return; }
+          let res = await supabaseClient.from('products').insert([payload]);
+          if (res.error && res.error.message.includes("'images' column")) {
+            const fallbackPayload = { ...payload };
+            delete fallbackPayload.images;
+            res = await supabaseClient.from('products').insert([fallbackPayload]);
+            if (!res.error) {
+              alert('Product saved with primary photo! To enable all 4 photos, please run the SQL command in Supabase.');
+            }
+          }
+          if (res.error) { alert('Error inserting product: ' + res.error.message); return; }
         }
       } else {
         if (editId) {
