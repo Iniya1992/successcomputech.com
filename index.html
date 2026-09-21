@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <!-- Supabase CDN Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -27,11 +30,6 @@
               700: '#be123c',
               800: '#9f1239',
               900: '#881337',
-            },
-            accent: {
-              amber: '#f59e0b',
-              emerald: '#10b981',
-              violet: '#8b5cf6',
             }
           }
         }
@@ -41,20 +39,10 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-    }
-    .hero-gradient {
-      background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 50%, #fef2f2 100%);
-    }
-    .badge-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+    .glass-nav { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); }
+    .hero-gradient { background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 50%, #fef2f2 100%); }
+    .badge-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
@@ -64,27 +52,25 @@
     <div class="hidden sm:flex items-center space-x-3 text-xs opacity-90 mx-auto sm:mx-0">
       <span><i class="fa-solid fa-star text-amber-300 mr-1"></i> 4.9/5 Rating</span>
       <span>•</span>
-      <span><i class="fa-solid fa-truck-fast mr-1"></i> Express Delivery in Tamil Nadu & Across India</span>
+      <span><i class="fa-solid fa-truck-fast mr-1"></i> Fast Delivery across Tamil Nadu & All India</span>
       <span>•</span>
-      <span><i class="fa-solid fa-location-dot mr-1"></i> Based in Tiruppur</span>
+      <span><i class="fa-solid fa-location-dot mr-1"></i> Tiruppur</span>
     </div>
-    <div class="text-center w-full sm:w-auto font-medium">
-      🎁 Order via WhatsApp for instant photo preview!
+    <div id="announcementText" class="text-center w-full sm:w-auto font-medium">
+      🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.
     </div>
     <div class="hidden md:flex items-center space-x-2">
-      <button onclick="switchView('admin')" class="bg-white/20 hover:bg-white/30 text-white text-xs px-2.5 py-0.5 rounded-full backdrop-blur transition flex items-center gap-1.5">
-        <i class="fa-solid fa-lock text-[10px]"></i> Admin Portal
-      </button>
+      <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full"><i class="fa-solid fa-shield-halved mr-1"></i> Verified Studio</span>
     </div>
   </div>
 
-  <!-- NAVIGATION BAR -->
+  <!-- NAVIGATION BAR (PUBLIC) -->
   <header class="sticky top-0 z-40 glass-nav border-b border-rose-100 shadow-sm transition">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
         <!-- Brand Logo -->
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('viewer'); filterCategory('All');">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="resetAllFilters()">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-rose-400 flex items-center justify-center text-white shadow-md shadow-rose-200">
             <i class="fa-solid fa-gift text-2xl"></i>
           </div>
@@ -107,16 +93,11 @@
 
         <!-- Action Buttons -->
         <div class="flex items-center space-x-3 sm:space-x-4">
-          <!-- View Toggle for Mobile/Desktop -->
-          <button id="viewToggleBtn" onclick="toggleMainView()" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-gray-300 hover:bg-gray-100 text-gray-700 transition flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-sliders text-brand-600"></i>
-            <span id="viewToggleText">Admin Mode</span>
-          </button>
-
           <!-- WhatsApp Direct Contact -->
-          <a id="navWhatsappBtn" href="https://wa.me/919944444834" target="_blank" class="hidden sm:inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
+          <a id="navWhatsappBtn" href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
             <i class="fa-brands fa-whatsapp text-base"></i>
-            <span>Chat</span>
+            <span class="hidden sm:inline">WhatsApp Order</span>
+            <span class="sm:hidden">Chat</span>
           </a>
 
           <!-- Cart Drawer Button -->
@@ -138,10 +119,8 @@
     </div>
   </header>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN CONTAINER: CUSTOMER STOREFRONT (VIEWER PAGE) -->
-  <!-- ========================================================================= -->
-  <main id="view-customer" class="flex-1">
+  <!-- MAIN STOREFRONT CONTENT -->
+  <main class="flex-1">
 
     <!-- HERO SECTION -->
     <section class="hero-gradient border-b border-rose-100 py-10 sm:py-16 relative overflow-hidden">
@@ -164,7 +143,7 @@
                 <span>Explore Gift Catalog</span>
                 <i class="fa-solid fa-arrow-right text-xs"></i>
               </button>
-              <button onclick="openCustomRequestModal()" class="bg-white hover:bg-rose-50 text-gray-800 font-bold text-sm px-6 py-3.5 rounded-xl border border-gray-200 shadow-sm transition flex items-center gap-2">
+              <button onclick="openCustomRequestWhatsApp()" class="bg-white hover:bg-rose-50 text-gray-800 font-bold text-sm px-6 py-3.5 rounded-xl border border-gray-200 shadow-sm transition flex items-center gap-2">
                 <i class="fa-brands fa-whatsapp text-emerald-500 text-lg"></i>
                 <span>Custom Order on WhatsApp</span>
               </button>
@@ -193,10 +172,10 @@
               <div class="absolute -top-4 -left-4 w-72 h-72 bg-rose-200/50 rounded-full blur-3xl pointer-events-none"></div>
               <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-xl border border-rose-100 relative">
                 <div class="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-gray-100">
-                  <img id="hero-banner-img" src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Personalized Acrylic Gift" class="w-full h-full object-cover" />
+                  <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Personalized Acrylic Gift" class="w-full h-full object-cover" />
                   <div class="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur px-4 py-2.5 rounded-xl shadow-lg flex items-center justify-between">
                     <div>
-                      <p class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Bestseller of the Week</p>
+                      <p class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Bestseller in Tiruppur</p>
                       <p class="text-xs font-bold text-gray-800">Spotify Acrylic LED Frame with Stand</p>
                     </div>
                     <span class="text-sm font-black text-brand-600">₹599</span>
@@ -230,7 +209,7 @@
       </div>
     </section>
 
-    <!-- QUICK CATEGORY PILLS (Like ModernGifts.in) -->
+    <!-- QUICK CATEGORY PILLS -->
     <section class="bg-white border-b border-gray-100 py-6">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-3">
@@ -243,7 +222,7 @@
       </div>
     </section>
 
-    <!-- BUDGET FILTERS SECTION (Gifts Under ₹199, ₹499, ₹799, ₹999) -->
+    <!-- BUDGET FILTERS SECTION -->
     <section class="py-5 bg-gradient-to-b from-rose-50/40 to-transparent border-b border-rose-100/50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -267,7 +246,6 @@
     <!-- PRODUCT CATALOG & GRID -->
     <section id="catalogSection" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Catalog Header & Secondary Filters -->
       <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 gap-4 border-b border-gray-200">
         <div>
           <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight font-serif" id="currentFilterTitle">All Personalized Gifts</h2>
@@ -307,7 +285,7 @@
         <div class="text-center max-w-2xl mx-auto mb-10">
           <h3 class="text-xs font-bold text-brand-600 uppercase tracking-widest">Effortless Ordering</h3>
           <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 font-serif mt-1">How Customization Works</h2>
-          <p class="text-xs sm:text-sm text-gray-500 mt-2">Get your bespoke gift crafted in three simple steps</p>
+          <p class="text-xs sm:text-sm text-gray-500 mt-2">Get your personalized keepsake crafted in three simple steps</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div class="p-6 rounded-2xl bg-rose-50/50 border border-rose-100/60">
@@ -365,205 +343,7 @@
 
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN CONTAINER: ADMIN PANEL & DASHBOARD (ADMIN OPTIONS) -->
-  <!-- ========================================================================= -->
-  <section id="view-admin" class="flex-1 hidden bg-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      
-      <!-- Admin Top Navigation & Stats -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 gap-4 border-b border-gray-200">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
-            <h2 class="text-2xl font-bold text-gray-900">Admin Control Center</h2>
-          </div>
-          <p class="text-xs text-gray-500 mt-0.5">Manage products, incoming orders, and store settings for <strong>Success Computech</strong></p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="switchView('viewer')" class="bg-white border border-gray-300 text-gray-700 text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-eye text-brand-600"></i> Open Live Storefront
-          </button>
-          <button onclick="exportDataBackup()" class="bg-gray-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-gray-900 transition flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-download"></i> Backup Data
-          </button>
-        </div>
-      </div>
-
-      <!-- Quick KPI Counters -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <div class="flex justify-between items-start">
-            <p class="text-xs font-semibold text-gray-500 uppercase">Live Products</p>
-            <span class="p-1.5 bg-rose-50 text-brand-600 rounded-lg text-xs"><i class="fa-solid fa-cubes"></i></span>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiProductCount">0</p>
-          <p class="text-[11px] text-emerald-600 font-medium mt-1"><i class="fa-solid fa-circle-check mr-1"></i>Active in Catalog</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <div class="flex justify-between items-start">
-            <p class="text-xs font-semibold text-gray-500 uppercase">Total Orders</p>
-            <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg text-xs"><i class="fa-solid fa-cart-flatbed"></i></span>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiOrderCount">0</p>
-          <p class="text-[11px] text-gray-500 font-medium mt-1">Recorded via Storefront</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <div class="flex justify-between items-start">
-            <p class="text-xs font-semibold text-gray-500 uppercase">Store Revenue</p>
-            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-          </div>
-          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiRevenue">₹0</p>
-          <p class="text-[11px] text-emerald-600 font-medium mt-1">Estimated Sales Value</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <div class="flex justify-between items-start">
-            <p class="text-xs font-semibold text-gray-500 uppercase">WhatsApp Studio</p>
-            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs"><i class="fa-brands fa-whatsapp"></i></span>
-          </div>
-          <p class="text-sm font-bold text-gray-900 mt-2 truncate" id="kpiPhone">919944444834</p>
-          <p class="text-[11px] text-gray-500 font-medium mt-1">Direct order gateway</p>
-        </div>
-      </div>
-
-      <!-- Admin Tab Switcher -->
-      <div class="flex items-center space-x-2 border-b border-gray-200 mb-6">
-        <button onclick="switchAdminTab('products')" id="tabBtn-products" class="admin-tab-btn active px-4 py-3 font-bold text-xs sm:text-sm text-brand-600 border-b-2 border-brand-600 flex items-center gap-2">
-          <i class="fa-solid fa-boxes-stacked"></i> Products Management (<span id="adminTabProductCount">0</span>)
-        </button>
-        <button onclick="switchAdminTab('orders')" id="tabBtn-orders" class="admin-tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
-          <i class="fa-solid fa-clipboard-list"></i> Customer Orders (<span id="adminTabOrderCount">0</span>)
-        </button>
-        <button onclick="switchAdminTab('settings')" id="tabBtn-settings" class="admin-tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
-          <i class="fa-solid fa-gear"></i> Store & WhatsApp Settings
-        </button>
-      </div>
-
-      <!-- TAB 1: PRODUCT MANAGEMENT -->
-      <div id="adminTab-products" class="space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200">
-          <div class="flex items-center gap-2">
-            <input type="text" id="adminProductSearch" oninput="filterAdminProducts()" placeholder="Filter product by name or category..." class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs w-64 focus:outline-none focus:ring-2 focus:ring-brand-500" />
-          </div>
-          <button onclick="openProductModal('add')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
-            <i class="fa-solid fa-plus"></i> Add New Gift Item
-          </button>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-600">
-              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
-                <tr>
-                  <th class="py-3.5 px-4">Item</th>
-                  <th class="py-3.5 px-4">Category</th>
-                  <th class="py-3.5 px-4">Price (Offer / MRP)</th>
-                  <th class="py-3.5 px-4">Occasion</th>
-                  <th class="py-3.5 px-4">Badge</th>
-                  <th class="py-3.5 px-4">Stock Status</th>
-                  <th class="py-3.5 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="adminProductTableBody" class="divide-y divide-gray-100">
-                <!-- Admin product rows injected here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2: ORDER TRACKING -->
-      <div id="adminTab-orders" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-          <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <div>
-              <h4 class="font-bold text-sm text-gray-800">Recorded Customer Orders</h4>
-              <p class="text-[11px] text-gray-500">Orders placed through the website or WhatsApp checkout</p>
-            </div>
-            <button onclick="clearAllOrders()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold">
-              <i class="fa-solid fa-trash-can mr-1"></i> Clear Orders
-            </button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-600">
-              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
-                <tr>
-                  <th class="py-3.5 px-4">Order ID & Date</th>
-                  <th class="py-3.5 px-4">Customer Details</th>
-                  <th class="py-3.5 px-4">Items & Customization</th>
-                  <th class="py-3.5 px-4">Total Amount</th>
-                  <th class="py-3.5 px-4">Status</th>
-                  <th class="py-3.5 px-4 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody id="adminOrderTableBody" class="divide-y divide-gray-100">
-                <!-- Orders injected here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: STORE SETTINGS -->
-      <div id="adminTab-settings" class="hidden">
-        <div class="max-w-3xl bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
-          <div>
-            <h3 class="text-lg font-bold text-gray-900">Storefront & Business Information</h3>
-            <p class="text-xs text-gray-500">Configure your business identity in Tiruppur for WhatsApp checkout and headers.</p>
-          </div>
-
-          <form id="storeSettingsForm" onsubmit="saveStoreSettings(event)" class="space-y-4 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="font-bold text-gray-700 block mb-1">Company / Brand Name</label>
-                <input type="text" id="settingBrandName" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-              </div>
-              <div>
-                <label class="font-bold text-gray-700 block mb-1">Brand Tagline</label>
-                <input type="text" id="settingTagline" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="font-bold text-gray-700 block mb-1">WhatsApp Business Number (with 91 country code)</label>
-                <input type="text" id="settingWhatsapp" placeholder="919944444834" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-                <span class="text-[10px] text-gray-400">All customer WhatsApp orders will redirect to this number.</span>
-              </div>
-              <div>
-                <label class="font-bold text-gray-700 block mb-1">UPI ID for Direct Payments</label>
-                <input type="text" id="settingUpiId" placeholder="successcomputech@upi" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
-              </div>
-            </div>
-
-            <div>
-              <label class="font-bold text-gray-700 block mb-1">Store / Studio Address</label>
-              <textarea id="settingAddress" rows="2" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500"></textarea>
-            </div>
-
-            <div>
-              <label class="font-bold text-gray-700 block mb-1">Announcement Bar Text</label>
-              <input type="text" id="settingAnnouncement" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
-            </div>
-
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
-              <button type="button" onclick="restoreDemoDefaults()" class="text-xs text-gray-500 hover:text-rose-600 font-semibold">
-                <i class="fa-solid fa-rotate-left mr-1"></i> Reset to Default Sample Catalog
-              </button>
-              <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-sm transition">
-                Save Store Settings
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: PRODUCT CUSTOMIZATION & ORDER PREVIEW (VIEWER) -->
-  <!-- ========================================================================= -->
+  <!-- MODAL: PRODUCT CUSTOMIZATION & ORDER PREVIEW -->
   <div id="productModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl animate-fade-in max-h-[90vh] flex flex-col">
       <div class="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
@@ -641,94 +421,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MODAL: ADD / EDIT PRODUCT (ADMIN) -->
-  <!-- ========================================================================= -->
-  <div id="adminProductModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
-        <h3 class="font-bold text-base text-gray-900" id="adminModalTitle">Add New Gift Product</h3>
-        <button onclick="closeAdminProductModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="productForm" onsubmit="saveAdminProduct(event)" class="p-5 overflow-y-auto space-y-4 text-xs">
-        <input type="hidden" id="editProductId" />
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Product Title</label>
-          <input type="text" id="adminProdTitle" placeholder="e.g. Acrylic Spotify Scan Frame" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-gray-700 block mb-1">Category</label>
-            <select id="adminProdCategory" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
-              <option value="Acrylic">Acrylic Frames</option>
-              <option value="Frames">Photo Frames</option>
-              <option value="Mugs">Personalized Mugs</option>
-              <option value="Keychains">Custom Keychains</option>
-              <option value="Hampers">Gift Hampers</option>
-              <option value="Puzzles">Photo Puzzles</option>
-              <option value="Lighting">Lamps & Light Stands</option>
-              <option value="Combos">Combos & Specials</option>
-            </select>
-          </div>
-          <div>
-            <label class="font-bold text-gray-700 block mb-1">Occasion / Theme</label>
-            <select id="adminProdOccasion" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
-              <option value="All">All Occasions</option>
-              <option value="Birthday">Birthday</option>
-              <option value="Anniversary">Anniversary</option>
-              <option value="Love">Love & Valentine</option>
-              <option value="Friends">Friends & Family</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-gray-700 block mb-1">Offer Price (₹)</label>
-            <input type="number" id="adminProdPrice" placeholder="599" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-          </div>
-          <div>
-            <label class="font-bold text-gray-700 block mb-1">Original MRP (₹)</label>
-            <input type="number" id="adminProdMRP" placeholder="899" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-          </div>
-        </div>
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Image URL (Unsplash or direct image link)</label>
-          <input type="url" id="adminProdImage" placeholder="https://images.unsplash.com/..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
-        </div>
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Badge Tag</label>
-          <input type="text" id="adminProdBadge" placeholder="e.g. Bestseller, Trending, 40% OFF" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
-        </div>
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Description & Specs</label>
-          <textarea id="adminProdDesc" rows="3" placeholder="Specs, dimensions, acrylic grade, photo requirements..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required></textarea>
-        </div>
-
-        <div class="flex items-center gap-2 pt-2">
-          <input type="checkbox" id="adminProdInStock" class="w-4 h-4 text-brand-600 rounded" checked />
-          <label for="adminProdInStock" class="font-bold text-gray-700">Item is in stock and visible to customers</label>
-        </div>
-
-        <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeAdminProductModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-bold">Cancel</button>
-          <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-sm">Save Product</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
   <!-- SLIDE-OVER CART DRAWER -->
-  <!-- ========================================================================= -->
   <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
     <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
@@ -772,7 +465,7 @@
             <input type="text" id="orderDeliveryAddress" placeholder="Delivery Address & Pincode (Tiruppur / Tamil Nadu / All India)" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs" />
           </div>
 
-          <button onclick="completeCheckout('whatsapp')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition">
+          <button onclick="completeCheckout()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition">
             <i class="fa-brands fa-whatsapp text-lg"></i>
             <span>Send Order via WhatsApp</span>
           </button>
@@ -799,8 +492,7 @@
           </p>
           <div class="flex items-center space-x-3 text-gray-400 text-base pt-2">
             <a href="#" class="hover:text-rose-400"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
-            <a href="#" class="hover:text-blue-400"><i class="fa-brands fa-facebook"></i></a>
+            <a id="footerWaIcon" href="https://wa.me/919876543210" target="_blank" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
 
@@ -816,22 +508,22 @@
         </div>
 
         <div>
-          <h4 class="text-white font-bold text-sm mb-3">Customer Care</h4>
+          <h4 class="text-white font-bold text-sm mb-3">Customer Support</h4>
           <ul class="space-y-2">
             <li><a href="javascript:void(0)" onclick="scrollToProducts()" class="hover:text-white">Browse Full Catalog</a></li>
             <li><a href="javascript:void(0)" onclick="toggleCartDrawer()" class="hover:text-white">View Cart & Checkout</a></li>
-            <li><a href="javascript:void(0)" onclick="switchView('admin')" class="hover:text-white">Admin Management</a></li>
-            <li><a href="javascript:void(0)" class="hover:text-white">Shipping & Safe Acrylic Packing</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-white">Safe Acrylic Packing & Delivery</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-white">Terms & Return Policy</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="text-white font-bold text-sm mb-3">Studio Location</h4>
-          <p class="text-gray-300" id="footerAddress">Tiruppur, Tamil Nadu, India</p>
+          <p class="text-gray-300" id="footerAddress">Success Computech, Tiruppur, Tamil Nadu - 641604</p>
           <p class="text-gray-400 mt-2">WhatsApp Order: <span id="footerPhone" class="text-emerald-400 font-bold">+91 98765 43210</span></p>
           <div class="mt-4 p-3 rounded-xl bg-gray-800/80 border border-gray-700">
             <p class="text-[11px] text-gray-300 font-semibold">Need urgent customization for an anniversary or birthday?</p>
-            <a id="footerDirectWa" href="https://wa.me/919944444834" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
+            <a id="footerDirectWa" href="https://wa.me/919876543210" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
               <i class="fa-brands fa-whatsapp mr-1"></i> Send Instant Message
             </a>
           </div>
@@ -846,150 +538,32 @@
     </div>
   </footer>
 
-  <!-- ========================================================================= -->
-  <!-- APPLICATION JAVASCRIPT LOGIC -->
-  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: STOREFRONT LOGIC & SUPABASE DATA SYNC -->
   <script>
-    // --- DEFAULT CATALOG SEED DATA ---
-    const DEFAULT_PRODUCTS = [
-      {
-        id: 'p1',
-        title: 'Spotify Acrylic LED Frame with Custom Scannable Song',
-        category: 'Acrylic',
-        occasion: 'Love',
-        price: 599,
-        mrp: 899,
-        badge: 'Bestseller',
-        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80',
-        desc: 'Premium crystal-clear 4mm acrylic with wooden LED base. Customized with your favourite picture, song name, artist, and scannable Spotify code.',
-        inStock: true
-      },
-      {
-        id: 'p2',
-        title: 'Customized Wooden Moon Lamp Frame',
-        category: 'Lighting',
-        occasion: 'Anniversary',
-        price: 490,
-        mrp: 799,
-        badge: 'Trending',
-        image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
-        desc: 'Romantic lunar lamp texture with customized high-resolution photo engraving. Warm ambient light suitable for bedside tables.',
-        inStock: true
-      },
-      {
-        id: 'p3',
-        title: 'Personalized A4 Couple Photo Puzzle Frame',
-        category: 'Puzzles',
-        occasion: 'Anniversary',
-        price: 299,
-        mrp: 650,
-        badge: 'Fun Gift',
-        image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=600&q=80',
-        desc: 'Interactive 120-piece puzzle printed with your high-definition photo. Assembled and framed ready for wall hanging.',
-        inStock: true
-      },
-      {
-        id: 'p4',
-        title: 'Calendar Mug with Birthday Photo & Tamil / English Date',
-        category: 'Mugs',
-        occasion: 'Birthday',
-        price: 349,
-        mrp: 425,
-        badge: 'Popular',
-        image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
-        desc: 'High-grade ceramic glossy mug marked with the recipient’s birth date circled on a calendar with a personal wish message.',
-        inStock: true
-      },
-      {
-        id: 'p5',
-        title: 'Secret Voice Metal Keychain with QR Code',
-        category: 'Keychains',
-        occasion: 'Love',
-        price: 199,
-        mrp: 399,
-        badge: 'Budget Pick',
-        image: 'https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&w=600&q=80',
-        desc: 'Durable laser-engraved metal keychain with a photo on one side and a scannable QR code linking to your custom audio wish or video message.',
-        inStock: true
-      },
-      {
-        id: 'p6',
-        title: 'Luxury Birthday Surprise Hamper with Name Magnet & Treats',
-        category: 'Hampers',
-        occasion: 'Birthday',
-        price: 999,
-        mrp: 1899,
-        badge: 'Mega Deal',
-        image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80',
-        desc: 'Includes personalized chocolate box, name magnet keepsake, mini photo album, and greeting card in a luxury gift box.',
-        inStock: true
-      },
-      {
-        id: 'p7',
-        title: 'King & Queen Dual Couple Photo Frames (Set of 2)',
-        category: 'Frames',
-        occasion: 'Anniversary',
-        price: 799,
-        mrp: 1200,
-        badge: 'Top Choice',
-        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80',
-        desc: 'A pair of matching royal crown themed black synthetic wood frames crafted for wedding and anniversary milestones.',
-        inStock: true
-      },
-      {
-        id: 'p8',
-        title: 'Custom Photo Polaroid Transparent Keychain',
-        category: 'Keychains',
-        occasion: 'Friends',
-        price: 149,
-        mrp: 299,
-        badge: 'Under ₹199',
-        image: 'https://images.unsplash.com/photo-1582845512747-e42001c95638?auto=format&fit=crop&w=600&q=80',
-        desc: 'Double-sided transparent acrylic mini polaroid keychain. Pocket-sized keepsake for best friends and couples.',
-        inStock: true
-      },
-      {
-        id: 'p9',
-        title: 'Acrylic Daily Photo Desk Calendar with Wooden Stand',
-        category: 'Acrylic',
-        occasion: 'Birthday',
-        price: 749,
-        mrp: 1299,
-        badge: 'New Arrival',
-        image: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=600&q=80',
-        desc: 'Elegant desktop acrylic calendar stand with monthly milestone cards featuring your favourite family moments.',
-        inStock: true
-      },
-      {
-        id: 'p10',
-        title: 'Vintage Friendship Wooden Collage Frame',
-        category: 'Frames',
-        occasion: 'Friends',
-        price: 499,
-        mrp: 750,
-        badge: 'Friendship Special',
-        image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
-        desc: 'Rustic wood finish photo collage holding 6 cherished snapshots with personalized quote and names.',
-        inStock: true
-      }
+    // Fallback Initial Catalog
+    const DEFAULT_FALLBACK_PRODUCTS = [
+      { id: 'p1', title: 'Spotify Acrylic LED Frame with Custom Scannable Song', category: 'Acrylic', occasion: 'Love', price: 599, mrp: 899, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80', description: 'Premium crystal-clear 4mm acrylic with wooden LED base. Customized with your favourite picture, song name, and scannable Spotify code.', in_stock: true },
+      { id: 'p2', title: 'Customized Wooden Moon Lamp Frame', category: 'Lighting', occasion: 'Anniversary', price: 490, mrp: 799, badge: 'Trending', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80', description: 'Romantic lunar lamp texture with customized high-resolution photo engraving. Warm ambient light.', in_stock: true },
+      { id: 'p3', title: 'Personalized A4 Couple Photo Puzzle Frame', category: 'Puzzles', occasion: 'Anniversary', price: 299, mrp: 650, badge: 'Fun Gift', image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=600&q=80', description: 'Interactive 120-piece puzzle printed with your high-definition photo. Assembled and framed.', in_stock: true },
+      { id: 'p4', title: 'Calendar Mug with Birthday Photo & Tamil / English Date', category: 'Mugs', occasion: 'Birthday', price: 349, mrp: 425, badge: 'Popular', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', description: 'High-grade ceramic glossy mug marked with recipient birth date circled on a calendar with a personal wish.', in_stock: true },
+      { id: 'p5', title: 'Secret Voice Metal Keychain with QR Code', category: 'Keychains', occasion: 'Love', price: 199, mrp: 399, badge: 'Budget Pick', image: 'https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&w=600&q=80', description: 'Durable laser-engraved metal keychain with photo on one side and a QR code linking to custom audio/video.', in_stock: true },
+      { id: 'p6', title: 'Luxury Birthday Surprise Hamper with Name Magnet', category: 'Hampers', occasion: 'Birthday', price: 999, mrp: 1899, badge: 'Mega Deal', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80', description: 'Includes personalized chocolate box, name magnet keepsake, mini photo album, and greeting card.', in_stock: true },
+      { id: 'p7', title: 'King & Queen Dual Couple Photo Frames (Set of 2)', category: 'Frames', occasion: 'Anniversary', price: 799, mrp: 1200, badge: 'Top Choice', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80', description: 'A pair of matching royal crown themed black synthetic wood frames crafted for wedding and anniversary milestones.', in_stock: true },
+      { id: 'p8', title: 'Custom Photo Polaroid Transparent Keychain', category: 'Keychains', occasion: 'Friends', price: 149, mrp: 299, badge: 'Under ₹199', image: 'https://images.unsplash.com/photo-1582845512747-e42001c95638?auto=format&fit=crop&w=600&q=80', description: 'Double-sided transparent acrylic mini polaroid keychain. Pocket-sized keepsake for friends and couples.', in_stock: true }
     ];
 
     const DEFAULT_SETTINGS = {
-      brandName: 'Success Computech',
-      brandTagline: 'Personalized Gifts • Photo Restoration • Tiruppur',
-      whatsapp: '919944444834',
-      upiId: 'successcomputech@upi',
-      address: 'Success Computech, Near Old Bus Stand / Railway Station, Tiruppur, Tamil Nadu - 641604',
+      brand_name: 'Success Computech',
+      brand_tagline: 'Personalized Gifts • Photo Restoration • Tiruppur',
+      whatsapp: '919876543210',
+      upi_id: 'successcomputech@upi',
+      address: 'Success Computech, Tiruppur, Tamil Nadu - 641604',
       announcement: '🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.'
     };
 
-    // --- APPLICATION STATE ---
     let state = {
-      view: 'viewer', // 'viewer' or 'admin'
-      adminTab: 'products',
       products: [],
-      orders: [],
-      settings: {},
+      settings: {...DEFAULT_SETTINGS},
       cart: [],
       activeCategory: 'All',
       activeOccasion: 'All',
@@ -998,123 +572,6 @@
       currentSelectedProduct: null
     };
 
-    // --- INITIALIZATION ---
-    function initApp() {
-      // Load products
-      const savedProducts = localStorage.getItem('sc_products');
-      state.products = savedProducts ? JSON.parse(savedProducts) : [...DEFAULT_PRODUCTS];
-
-      // Load settings
-      const savedSettings = localStorage.getItem('sc_settings');
-      state.settings = savedSettings ? JSON.parse(savedSettings) : {...DEFAULT_SETTINGS};
-
-      // Load orders
-      const savedOrders = localStorage.getItem('sc_orders');
-      state.orders = savedOrders ? JSON.parse(savedOrders) : [];
-
-      // Load cart
-      const savedCart = localStorage.getItem('sc_cart');
-      state.cart = savedCart ? JSON.parse(savedCart) : [];
-
-      applySettingsToUI();
-      renderCategoryPills();
-      renderViewerProducts();
-      updateCartBadge();
-      updateAdminDashboard();
-    }
-
-    function saveStateToStorage() {
-      localStorage.setItem('sc_products', JSON.stringify(state.products));
-      localStorage.setItem('sc_settings', JSON.stringify(state.settings));
-      localStorage.setItem('sc_orders', JSON.stringify(state.orders));
-      localStorage.setItem('sc_cart', JSON.stringify(state.cart));
-    }
-
-    // --- UI VIEW SWITCHING ---
-    function switchView(target) {
-      state.view = target;
-      const viewer = document.getElementById('view-customer');
-      const admin = document.getElementById('view-admin');
-      const toggleText = document.getElementById('viewToggleText');
-
-      if (target === 'admin') {
-        viewer.classList.add('hidden');
-        admin.classList.remove('hidden');
-        toggleText.textContent = 'Storefront';
-        updateAdminDashboard();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        admin.classList.add('hidden');
-        viewer.classList.remove('hidden');
-        toggleText.textContent = 'Admin Mode';
-        renderViewerProducts();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
-    function toggleMainView() {
-      if (state.view === 'viewer') {
-        switchView('admin');
-      } else {
-        switchView('viewer');
-      }
-    }
-
-    function switchAdminTab(tabName) {
-      state.adminTab = tabName;
-      ['products', 'orders', 'settings'].forEach(t => {
-        const tabContent = document.getElementById(`adminTab-${t}`);
-        const tabBtn = document.getElementById(`tabBtn-${t}`);
-        if (t === tabName) {
-          tabContent.classList.remove('hidden');
-          tabBtn.classList.add('active', 'text-brand-600', 'border-brand-600');
-          tabBtn.classList.remove('text-gray-500', 'border-transparent');
-        } else {
-          tabContent.classList.add('hidden');
-          tabBtn.classList.remove('active', 'text-brand-600', 'border-brand-600');
-          tabBtn.classList.add('text-gray-500', 'border-transparent');
-        }
-      });
-    }
-
-    // --- APPLY SETTINGS TO UI ---
-    function applySettingsToUI() {
-      document.getElementById('nav-brand-name').textContent = state.settings.brandName;
-      document.getElementById('nav-brand-tagline').textContent = state.settings.brandTagline;
-      document.getElementById('footerBrandName').textContent = state.settings.brandName;
-      document.getElementById('footerBrandTagline').textContent = state.settings.brandTagline;
-      document.getElementById('footerAddress').textContent = state.settings.address;
-      document.getElementById('footerPhone').textContent = `+${state.settings.whatsapp}`;
-      
-      const waUrl = `https://wa.me/${state.settings.whatsapp.replace(/[^0-9]/g, '')}`;
-      document.getElementById('navWhatsappBtn').href = waUrl;
-      document.getElementById('footerDirectWa').href = waUrl;
-
-      // Settings form values
-      document.getElementById('settingBrandName').value = state.settings.brandName;
-      document.getElementById('settingTagline').value = state.settings.brandTagline;
-      document.getElementById('settingWhatsapp').value = state.settings.whatsapp;
-      document.getElementById('settingUpiId').value = state.settings.upiId || '';
-      document.getElementById('settingAddress').value = state.settings.address;
-      document.getElementById('settingAnnouncement').value = state.settings.announcement;
-    }
-
-    function saveStoreSettings(e) {
-      e.preventDefault();
-      state.settings = {
-        brandName: document.getElementById('settingBrandName').value.trim(),
-        brandTagline: document.getElementById('settingTagline').value.trim(),
-        whatsapp: document.getElementById('settingWhatsapp').value.trim(),
-        upiId: document.getElementById('settingUpiId').value.trim(),
-        address: document.getElementById('settingAddress').value.trim(),
-        announcement: document.getElementById('settingAnnouncement').value.trim()
-      };
-      saveStateToStorage();
-      applySettingsToUI();
-      alert('Store settings saved successfully! All WhatsApp order links have been updated.');
-    }
-
-    // --- CATEGORY PILLS ---
     const CATEGORIES = [
       { name: 'All', icon: 'fa-cubes' },
       { name: 'Acrylic', icon: 'fa-wand-magic-sparkles' },
@@ -1126,6 +583,63 @@
       { name: 'Lighting', icon: 'fa-lightbulb' }
     ];
 
+    async function initStorefront() {
+      // 1. Fetch Store Settings
+      if (supabaseClient) {
+        try {
+          const { data: setts } = await supabaseClient.from('store_settings').select('*').single();
+          if (setts) state.settings = setts;
+        } catch (e) { console.warn('Could not fetch Supabase settings, using default', e); }
+      }
+
+      applySettingsToUI();
+
+      // 2. Fetch Products
+      if (supabaseClient) {
+        try {
+          const { data: prods, error } = await supabaseClient
+            .from('products')
+            .select('*')
+            .eq('in_stock', true)
+            .order('created_at', { ascending: false });
+          if (!error && prods && prods.length > 0) {
+            state.products = prods;
+          } else {
+            state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+          }
+        } catch (e) {
+          console.warn('Using fallback products', e);
+          state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+        }
+      } else {
+        state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+      }
+
+      // Load cart from session/local storage
+      const savedCart = localStorage.getItem('sc_public_cart');
+      if (savedCart) state.cart = JSON.parse(savedCart);
+
+      renderCategoryPills();
+      renderProducts();
+      updateCartBadge();
+    }
+
+    function applySettingsToUI() {
+      document.getElementById('nav-brand-name').textContent = state.settings.brand_name;
+      document.getElementById('nav-brand-tagline').textContent = state.settings.brand_tagline;
+      document.getElementById('footerBrandName').textContent = state.settings.brand_name;
+      document.getElementById('footerBrandTagline').textContent = state.settings.brand_tagline;
+      document.getElementById('footerAddress').textContent = state.settings.address;
+      document.getElementById('footerPhone').textContent = `+${state.settings.whatsapp}`;
+      document.getElementById('announcementText').textContent = state.settings.announcement;
+
+      const waClean = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      const waLink = `https://wa.me/${waClean}`;
+      document.getElementById('navWhatsappBtn').href = waLink;
+      document.getElementById('footerDirectWa').href = waLink;
+      document.getElementById('footerWaIcon').href = waLink;
+    }
+
     function renderCategoryPills() {
       const container = document.getElementById('categoryPillContainer');
       container.innerHTML = CATEGORIES.map(cat => `
@@ -1136,12 +650,11 @@
       `).join('');
     }
 
-    // --- FILTER & SEARCH LOGIC ---
     function filterCategory(catName) {
       state.activeCategory = catName;
       document.getElementById('currentFilterTitle').textContent = catName === 'All' ? 'All Personalized Gifts' : `${catName} Gifts Collection`;
       renderCategoryPills();
-      renderViewerProducts();
+      renderProducts();
       scrollToProducts();
     }
 
@@ -1156,7 +669,7 @@
           el.classList.add('text-gray-600');
         }
       });
-      renderViewerProducts();
+      renderProducts();
     }
 
     function filterBudget(limit) {
@@ -1170,17 +683,17 @@
           btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
         }
       });
-      renderViewerProducts();
+      renderProducts();
     }
 
     function handleSearch() {
       state.searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
-      renderViewerProducts();
+      renderProducts();
     }
 
     function handleMobileSearch() {
       state.searchQuery = document.getElementById('mobileSearchInput').value.toLowerCase().trim();
-      renderViewerProducts();
+      renderProducts();
     }
 
     function resetAllFilters() {
@@ -1199,34 +712,26 @@
       document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // --- VIEWER PRODUCTS RENDERING ---
-    function renderViewerProducts() {
+    function renderProducts() {
       const grid = document.getElementById('productGrid');
       const empty = document.getElementById('emptyState');
 
-      let filtered = state.products.filter(p => p.inStock);
+      let filtered = state.products.filter(p => p.in_stock);
 
-      // Category filter
       if (state.activeCategory !== 'All') {
         filtered = filtered.filter(p => p.category === state.activeCategory);
       }
-
-      // Occasion filter
       if (state.activeOccasion !== 'All') {
         filtered = filtered.filter(p => p.occasion === state.activeOccasion || p.occasion === 'All');
       }
-
-      // Budget filter
       if (state.activeBudget !== 'all') {
         const maxPrice = Number(state.activeBudget);
         filtered = filtered.filter(p => p.price <= maxPrice);
       }
-
-      // Search query
       if (state.searchQuery) {
         filtered = filtered.filter(p => 
           p.title.toLowerCase().includes(state.searchQuery) ||
-          p.desc.toLowerCase().includes(state.searchQuery) ||
+          (p.description && p.description.toLowerCase().includes(state.searchQuery)) ||
           p.category.toLowerCase().includes(state.searchQuery)
         );
       }
@@ -1244,7 +749,6 @@
         const discount = Math.round(((product.mrp - product.price) / product.mrp) * 100);
         return `
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
-            <!-- Product Image -->
             <div class="relative h-44 sm:h-52 bg-gray-100 overflow-hidden cursor-pointer" onclick="openProductCustomizer('${product.id}')">
               <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
               <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
@@ -1255,7 +759,6 @@
               </span>
             </div>
 
-            <!-- Product Body -->
             <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5">
               <div>
                 <div class="flex items-center justify-between text-[11px] text-gray-400 mb-1">
@@ -1267,7 +770,6 @@
                 </h3>
               </div>
 
-              <!-- Price & Quick CTA -->
               <div class="pt-2 border-t border-gray-100">
                 <div class="flex items-baseline gap-1.5 mb-2.5">
                   <span class="text-base sm:text-lg font-black text-gray-900">₹${product.price}</span>
@@ -1289,9 +791,9 @@
       }).join('');
     }
 
-    // --- PRODUCT CUSTOMIZER MODAL ---
+    // Modal & Ordering
     function openProductCustomizer(productId) {
-      const p = state.products.find(item => item.id === productId);
+      const p = state.products.find(item => item.id == productId);
       if (!p) return;
       state.currentSelectedProduct = p;
 
@@ -1300,13 +802,12 @@
       document.getElementById('modalProductPrice').textContent = `₹${p.price}`;
       document.getElementById('modalProductOriginalPrice').textContent = `₹${p.mrp}`;
       document.getElementById('modalFooterPrice').textContent = `₹${p.price}`;
-      document.getElementById('modalProductDesc').textContent = p.desc;
+      document.getElementById('modalProductDesc').textContent = p.description || '';
       document.getElementById('modalProductBadge').textContent = p.badge || p.category;
 
       const discount = Math.round(((p.mrp - p.price) / p.mrp) * 100);
       document.getElementById('modalDiscountPct').textContent = `${discount}% OFF`;
 
-      // Clear inputs
       document.getElementById('custNameInput').value = '';
       document.getElementById('custSongInput').value = '';
       document.getElementById('custNoteInput').value = '';
@@ -1330,7 +831,7 @@
         cartId: 'c_' + Date.now(),
         productId: p.id,
         title: p.title,
-        price: p.price,
+        price: Number(p.price),
         image: p.image,
         customName,
         customSong,
@@ -1339,13 +840,13 @@
       };
 
       state.cart.push(cartItem);
-      saveStateToStorage();
+      localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
       updateCartBadge();
       closeProductModal();
       toggleCartDrawer();
     }
 
-    function directOrderWhatsAppFromModal() {
+    async function directOrderWhatsAppFromModal() {
       if (!state.currentSelectedProduct) return;
       const p = state.currentSelectedProduct;
 
@@ -1353,36 +854,49 @@
       const customSong = document.getElementById('custSongInput').value.trim() || 'Not specified';
       const customNote = document.getElementById('custNoteInput').value.trim() || 'None';
 
-      const text = `*New Order Request - ${state.settings.brandName}*
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Record in Supabase if active
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([{
+            order_code: orderCode,
+            customer_name: customName,
+            customer_phone: 'WhatsApp User',
+            delivery_address: 'Direct WhatsApp Submission',
+            items: [ { title: p.title, price: p.price, customName, customSong, customNote } ],
+            total_amount: Number(p.price),
+            status: 'Order Placed'
+          }]);
+        } catch (e) { console.warn('Supabase order log skipped', e); }
+      }
+
+      const text = `*New Gift Order #${orderCode} - ${state.settings.brand_name}*
 
 ` +
         `*Product:* ${p.title}
 ` +
         `*Price:* ₹${p.price} (MRP: ₹${p.mrp})
 ` +
-        `*Personalized Name(s):* ${customName}
+        `*Personalized Name:* ${customName}
 ` +
         `*Special Song / Date:* ${customSong}
 ` +
-        `*Instructions:* ${customNote}
+        `*Notes:* ${customNote}
 
 ` +
-        `Hello ${state.settings.brandName}, I would like to order this custom gift. Please confirm photo upload and preview!`;
-
-      // Record order in system
-      recordOrder([ { title: p.title, price: p.price, customName, customSong } ], p.price, 'Customer via Modal');
+        `Hi ${state.settings.brand_name}, please confirm this order and guide me on photo upload & design proofing!`;
 
       const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
-      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank');
       closeProductModal();
     }
 
     function quickOrderWhatsApp(productId) {
-      const p = state.products.find(item => item.id === productId);
+      const p = state.products.find(item => item.id == productId);
       if (!p) return;
 
-      const text = `*Quick Inquiry / Order - ${state.settings.brandName}*
+      const text = `*Quick Inquiry - ${state.settings.brand_name}*
 
 ` +
         `*Product:* ${p.title}
@@ -1390,20 +904,19 @@
         `*Price:* ₹${p.price}
 
 ` +
-        `Hi Success Computech, I want to customize this product. Please share sample mockups and photo requirements!`;
+        `Hi Success Computech, I want to customize this gift in Tiruppur. Please send details!`;
 
-      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
-      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-    }
-
-    function openCustomRequestModal() {
-      const text = `Hi ${state.settings.brandName}, I need a custom gift designed for an upcoming occasion in Tiruppur. Please guide me with available options!`;
       const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
       window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // --- CART MANAGEMENT ---
+    function openCustomRequestWhatsApp() {
+      const text = `Hi ${state.settings.brand_name}, I want to order a custom gift for an upcoming occasion in Tiruppur. Please guide me!`;
+      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // Cart Management
     function toggleCartDrawer() {
       const drawer = document.getElementById('cartDrawer');
       drawer.classList.toggle('hidden');
@@ -1435,7 +948,7 @@
 
       let subtotal = 0;
       container.innerHTML = state.cart.map((item, idx) => {
-        subtotal += item.price * (item.quantity || 1);
+        subtotal += Number(item.price) * (item.quantity || 1);
         return `
           <div class="flex gap-3 bg-gray-50 p-3 rounded-2xl border border-gray-200/70 text-xs">
             <img src="${item.image}" alt="" class="w-16 h-16 rounded-xl object-cover border border-gray-200" />
@@ -1460,12 +973,12 @@
 
     function removeCartItem(idx) {
       state.cart.splice(idx, 1);
-      saveStateToStorage();
+      localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
       updateCartBadge();
       renderCartItems();
     }
 
-    function completeCheckout(method) {
+    async function completeCheckout() {
       if (state.cart.length === 0) {
         alert('Your cart is empty. Please add gifts first!');
         return;
@@ -1478,7 +991,7 @@
       let total = 0;
       let itemsSummary = '';
       state.cart.forEach((item, i) => {
-        total += item.price;
+        total += Number(item.price);
         itemsSummary += `${i + 1}. ${item.title} (₹${item.price})
 ` +
           (item.customName ? `   - Name: ${item.customName}
@@ -1487,7 +1000,24 @@
 ` : '');
       });
 
-      const orderMsg = `*Confirmed Cart Order - ${state.settings.brandName}*
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Record in Supabase database
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([{
+            order_code: orderCode,
+            customer_name: custName,
+            customer_phone: custPhone,
+            delivery_address: address,
+            items: state.cart,
+            total_amount: total,
+            status: 'Order Placed'
+          }]);
+        } catch (e) { console.warn('Order save fallback', e); }
+      }
+
+      const orderMsg = `*Confirmed Cart Order #${orderCode} - ${state.settings.brand_name}*
 
 ` +
         `*Customer Name:* ${custName}
@@ -1505,284 +1035,16 @@ ${itemsSummary}
 ` +
         `Please confirm this order and send payment instructions / UPI QR!`;
 
-      // Save to admin order tracker
-      recordOrder(state.cart, total, custName, custPhone, address);
-
-      // Clear cart
       state.cart = [];
-      saveStateToStorage();
+      localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
       updateCartBadge();
       toggleCartDrawer();
 
       const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
-      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(orderMsg)}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(orderMsg)}`, '_blank');
     }
 
-    // --- ORDER RECORDING & ADMIN TRACKING ---
-    function recordOrder(items, total, customerName, phone = 'WhatsApp Order', address = 'Tiruppur Delivery') {
-      const newOrder = {
-        orderId: 'SC-' + Math.floor(100000 + Math.random() * 900000),
-        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        items: items,
-        total: total,
-        customerName: customerName,
-        phone: phone,
-        address: address,
-        status: 'Order Placed'
-      };
-
-      state.orders.unshift(newOrder);
-      saveStateToStorage();
-      updateAdminDashboard();
-    }
-
-    function updateOrderStatus(orderId, newStatus) {
-      const order = state.orders.find(o => o.orderId === orderId);
-      if (order) {
-        order.status = newStatus;
-        saveStateToStorage();
-        updateAdminDashboard();
-      }
-    }
-
-    function clearAllOrders() {
-      if (confirm('Are you sure you want to clear all recorded orders?')) {
-        state.orders = [];
-        saveStateToStorage();
-        updateAdminDashboard();
-      }
-    }
-
-    // --- ADMIN PANEL FUNCTIONS ---
-    function updateAdminDashboard() {
-      // KPIs
-      document.getElementById('kpiProductCount').textContent = state.products.length;
-      document.getElementById('kpiOrderCount').textContent = state.orders.length;
-      document.getElementById('adminTabProductCount').textContent = state.products.length;
-      document.getElementById('adminTabOrderCount').textContent = state.orders.length;
-      document.getElementById('kpiPhone').textContent = `+${state.settings.whatsapp}`;
-
-      const rev = state.orders.reduce((acc, o) => acc + (o.total || 0), 0);
-      document.getElementById('kpiRevenue').textContent = `₹${rev.toLocaleString('en-IN')}`;
-
-      renderAdminProductTable(state.products);
-      renderAdminOrderTable();
-    }
-
-    function renderAdminProductTable(productList) {
-      const tbody = document.getElementById('adminProductTableBody');
-      if (productList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-400 font-medium">No products registered yet.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = productList.map(p => `
-        <tr class="hover:bg-gray-50/70 transition">
-          <td class="py-3 px-4">
-            <div class="flex items-center gap-3">
-              <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover border border-gray-200" alt="" />
-              <div>
-                <p class="font-bold text-gray-900">${p.title}</p>
-                <p class="text-[10px] text-gray-400">ID: ${p.id}</p>
-              </div>
-            </div>
-          </td>
-          <td class="py-3 px-4 font-semibold text-gray-700">${p.category}</td>
-          <td class="py-3 px-4">
-            <span class="font-bold text-gray-900">₹${p.price}</span>
-            <span class="text-gray-400 line-through text-[10px] ml-1">₹${p.mrp}</span>
-          </td>
-          <td class="py-3 px-4 font-medium">${p.occasion || 'All'}</td>
-          <td class="py-3 px-4">
-            ${p.badge ? `<span class="bg-rose-100 text-brand-700 px-2 py-0.5 rounded text-[10px] font-bold">${p.badge}</span>` : '<span class="text-gray-400">—</span>'}
-          </td>
-          <td class="py-3 px-4">
-            <span class="inline-flex items-center gap-1 font-semibold ${p.inStock ? 'text-emerald-600' : 'text-rose-600'}">
-              <span class="w-1.5 h-1.5 rounded-full ${p.inStock ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
-              ${p.inStock ? 'In Stock' : 'Out of Stock'}
-            </span>
-          </td>
-          <td class="py-3 px-4 text-right space-x-1">
-            <button onclick="openProductModal('edit', '${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-blue-600 font-bold" title="Edit">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button onclick="deleteProduct('${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-rose-600 font-bold" title="Delete">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function filterAdminProducts() {
-      const q = document.getElementById('adminProductSearch').value.toLowerCase().trim();
-      const filtered = state.products.filter(p => 
-        p.title.toLowerCase().includes(q) || 
-        p.category.toLowerCase().includes(q)
-      );
-      renderAdminProductTable(filtered);
-    }
-
-    function renderAdminOrderTable() {
-      const tbody = document.getElementById('adminOrderTableBody');
-      if (state.orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400">No customer orders recorded yet. Orders placed via storefront appear here.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = state.orders.map(o => `
-        <tr class="hover:bg-gray-50/70 transition">
-          <td class="py-3 px-4">
-            <p class="font-bold text-gray-900">${o.orderId}</p>
-            <p class="text-[10px] text-gray-400">${o.date}</p>
-          </td>
-          <td class="py-3 px-4">
-            <p class="font-bold text-gray-800">${o.customerName}</p>
-            <p class="text-[10px] text-gray-500">${o.phone}</p>
-            <p class="text-[10px] text-gray-400 truncate max-w-xs">${o.address}</p>
-          </td>
-          <td class="py-3 px-4">
-            <div class="space-y-1">
-              ${o.items.map(it => `
-                <div class="text-[11px]">
-                  <span class="font-semibold text-gray-800">• ${it.title}</span>
-                  ${it.customName ? `<span class="text-gray-500"> [Name: ${it.customName}]</span>` : ''}
-                </div>
-              `).join('')}
-            </div>
-          </td>
-          <td class="py-3 px-4 font-black text-brand-600">₹${o.total}</td>
-          <td class="py-3 px-4">
-            <select onchange="updateOrderStatus('${o.orderId}', this.value)" class="bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 font-bold focus:ring-1 focus:ring-brand-500">
-              <option value="Order Placed" ${o.status === 'Order Placed' ? 'selected' : ''}>⏳ Order Placed</option>
-              <option value="Photo Received" ${o.status === 'Photo Received' ? 'selected' : ''}>📷 Photo Received</option>
-              <option value="In Production" ${o.status === 'In Production' ? 'selected' : ''}>🖨️ In Production</option>
-              <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
-              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
-            </select>
-          </td>
-          <td class="py-3 px-4 text-right">
-            <a href="https://wa.me/${o.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(o.customerName)},%20regarding%20your%20custom%20gift%20order%20${o.orderId}%20at%20Success%20Computech..." target="_blank" class="text-emerald-600 hover:text-emerald-700 font-bold p-1">
-              <i class="fa-brands fa-whatsapp text-sm"></i>
-            </a>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    // --- ADD / EDIT PRODUCT MODAL ---
-    function openProductModal(mode, productId = null) {
-      const modal = document.getElementById('adminProductModal');
-      const title = document.getElementById('adminModalTitle');
-      const form = document.getElementById('productForm');
-
-      if (mode === 'edit' && productId) {
-        const p = state.products.find(item => item.id === productId);
-        if (!p) return;
-
-        title.textContent = 'Edit Gift Product';
-        document.getElementById('editProductId').value = p.id;
-        document.getElementById('adminProdTitle').value = p.title;
-        document.getElementById('adminProdCategory').value = p.category;
-        document.getElementById('adminProdOccasion').value = p.occasion || 'All';
-        document.getElementById('adminProdPrice').value = p.price;
-        document.getElementById('adminProdMRP').value = p.mrp;
-        document.getElementById('adminProdImage').value = p.image;
-        document.getElementById('adminProdBadge').value = p.badge || '';
-        document.getElementById('adminProdDesc').value = p.desc;
-        document.getElementById('adminProdInStock').checked = p.inStock;
-      } else {
-        title.textContent = 'Add New Gift Product';
-        form.reset();
-        document.getElementById('editProductId').value = '';
-        document.getElementById('adminProdImage').value = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
-        document.getElementById('adminProdInStock').checked = true;
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeAdminProductModal() {
-      document.getElementById('adminProductModal').classList.add('hidden');
-    }
-
-    function saveAdminProduct(e) {
-      e.preventDefault();
-      const editId = document.getElementById('editProductId').value;
-      
-      const productData = {
-        title: document.getElementById('adminProdTitle').value.trim(),
-        category: document.getElementById('adminProdCategory').value,
-        occasion: document.getElementById('adminProdOccasion').value,
-        price: Number(document.getElementById('adminProdPrice').value),
-        mrp: Number(document.getElementById('adminProdMRP').value),
-        image: document.getElementById('adminProdImage').value.trim(),
-        badge: document.getElementById('adminProdBadge').value.trim(),
-        desc: document.getElementById('adminProdDesc').value.trim(),
-        inStock: document.getElementById('adminProdInStock').checked
-      };
-
-      if (editId) {
-        const index = state.products.findIndex(p => p.id === editId);
-        if (index !== -1) {
-          state.products[index] = { ...state.products[index], ...productData };
-        }
-      } else {
-        const newProduct = {
-          id: 'p_' + Date.now(),
-          ...productData
-        };
-        state.products.unshift(newProduct);
-      }
-
-      saveStateToStorage();
-      closeAdminProductModal();
-      updateAdminDashboard();
-      renderViewerProducts();
-      alert('Product saved successfully!');
-    }
-
-    function deleteProduct(productId) {
-      if (confirm('Are you sure you want to delete this product?')) {
-        state.products = state.products.filter(p => p.id !== productId);
-        saveStateToStorage();
-        updateAdminDashboard();
-        renderViewerProducts();
-      }
-    }
-
-    function restoreDemoDefaults() {
-      if (confirm('Reset entire catalog to default customized gifts catalog? Custom added items will be replaced.')) {
-        state.products = [...DEFAULT_PRODUCTS];
-        state.settings = {...DEFAULT_SETTINGS};
-        saveStateToStorage();
-        applySettingsToUI();
-        updateAdminDashboard();
-        renderViewerProducts();
-        alert('Catalog reset to default Success Computech products.');
-      }
-    }
-
-    function exportDataBackup() {
-      const backupData = {
-        brand: state.settings.brandName,
-        exportDate: new Date().toISOString(),
-        products: state.products,
-        orders: state.orders,
-        settings: state.settings
-      };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `Success_Computech_Backup_${new Date().toISOString().slice(0, 10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    }
-
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', initApp);
+    window.addEventListener('DOMContentLoaded', initStorefront);
   </script>
 </body>
 </html>
