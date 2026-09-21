@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Success Computech | Personalized & Custom Gifts Tiruppur</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
+            },
+            accent: {
+              amber: '#f59e0b',
+              emerald: '#10b981',
+              violet: '#8b5cf6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 50%, #fef2f2 100%);
+    }
+    .badge-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div id="top-announcement" class="bg-gradient-to-r from-brand-600 via-rose-500 to-amber-500 text-white text-xs font-semibold py-2 px-4 text-center tracking-wide flex justify-between items-center transition-all">
+    <div class="hidden sm:flex items-center space-x-3 text-xs opacity-90 mx-auto sm:mx-0">
+      <span><i class="fa-solid fa-star text-amber-300 mr-1"></i> 4.9/5 Rating</span>
+      <span>•</span>
+      <span><i class="fa-solid fa-truck-fast mr-1"></i> Express Delivery in Tamil Nadu & Across India</span>
+      <span>•</span>
+      <span><i class="fa-solid fa-location-dot mr-1"></i> Based in Tiruppur</span>
+    </div>
+    <div class="text-center w-full sm:w-auto font-medium">
+      🎁 Order via WhatsApp for instant photo preview!
+    </div>
+    <div class="hidden md:flex items-center space-x-2">
+      <button onclick="switchView('admin')" class="bg-white/20 hover:bg-white/30 text-white text-xs px-2.5 py-0.5 rounded-full backdrop-blur transition flex items-center gap-1.5">
+        <i class="fa-solid fa-lock text-[10px]"></i> Admin Portal
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-rose-100 shadow-sm transition">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Brand Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('viewer'); filterCategory('All');">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-rose-400 flex items-center justify-center text-white shadow-md shadow-rose-200">
+            <i class="fa-solid fa-gift text-2xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xl sm:text-2xl text-gray-900 tracking-tight" id="nav-brand-name">Success Computech</span>
+              <span class="bg-rose-100 text-brand-700 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border border-rose-200">Gifts</span>
+            </div>
+            <p class="text-xs text-gray-500 font-medium tracking-wide" id="nav-brand-tagline">Personalized Gifts • Photo Restoration • Tiruppur</p>
+          </div>
+        </div>
+
+        <!-- Search Bar (Desktop) -->
+        <div class="hidden md:flex flex-1 max-w-md mx-8">
+          <div class="relative w-full">
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search Spotify frames, acrylics, mugs, keychains..." class="w-full pl-10 pr-4 py-2.5 bg-gray-100/80 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition" />
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <!-- View Toggle for Mobile/Desktop -->
+          <button id="viewToggleBtn" onclick="toggleMainView()" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-gray-300 hover:bg-gray-100 text-gray-700 transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-sliders text-brand-600"></i>
+            <span id="viewToggleText">Admin Mode</span>
+          </button>
+
+          <!-- WhatsApp Direct Contact -->
+          <a id="navWhatsappBtn" href="https://wa.me/919944444834" target="_blank" class="hidden sm:inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span>Chat</span>
+          </a>
+
+          <!-- Cart Drawer Button -->
+          <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-brand-600 transition">
+            <i class="fa-solid fa-bag-shopping text-xl"></i>
+            <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[11px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Search Input -->
+      <div class="md:hidden pb-3">
+        <div class="relative w-full">
+          <input type="text" id="mobileSearchInput" oninput="handleMobileSearch()" placeholder="Search custom gifts..." class="w-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white" />
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-2.5 text-gray-400 text-sm"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTAINER: CUSTOMER STOREFRONT (VIEWER PAGE) -->
+  <!-- ========================================================================= -->
+  <main id="view-customer" class="flex-1">
+
+    <!-- HERO SECTION -->
+    <section class="hero-gradient border-b border-rose-100 py-10 sm:py-16 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 bg-white/90 border border-rose-200 text-brand-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-brand-600 badge-pulse"></span>
+              Modern Custom Gifting Studio in Tiruppur
+            </div>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight font-serif">
+              Cherish Moments with <br class="hidden sm:inline"/><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-rose-500 to-amber-600">Personalized Gifts</span>
+            </h1>
+            <p class="text-gray-600 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              From scannable Spotify acrylic plaques and wooden photo frames to customized mugs, keychains, and luxury hampers. High-precision laser engraving & UV flatbed printing by <strong>Success Computech</strong>.
+            </p>
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+              <button onclick="scrollToProducts()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-rose-200 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                <span>Explore Gift Catalog</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </button>
+              <button onclick="openCustomRequestModal()" class="bg-white hover:bg-rose-50 text-gray-800 font-bold text-sm px-6 py-3.5 rounded-xl border border-gray-200 shadow-sm transition flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-emerald-500 text-lg"></i>
+                <span>Custom Order on WhatsApp</span>
+              </button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-3 gap-4 pt-6 max-w-md mx-auto lg:mx-0 border-t border-rose-200/60">
+              <div>
+                <p class="text-2xl font-black text-gray-900">5,000+</p>
+                <p class="text-xs text-gray-500 font-medium">Gifts Crafted</p>
+              </div>
+              <div>
+                <p class="text-2xl font-black text-gray-900">4.9 ★</p>
+                <p class="text-xs text-gray-500 font-medium">Customer Rating</p>
+              </div>
+              <div>
+                <p class="text-2xl font-black text-gray-900">100%</p>
+                <p class="text-xs text-gray-500 font-medium">Custom Preview</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Image & Highlights Banner -->
+          <div class="lg:col-span-5 flex justify-center">
+            <div class="relative w-full max-w-md">
+              <div class="absolute -top-4 -left-4 w-72 h-72 bg-rose-200/50 rounded-full blur-3xl pointer-events-none"></div>
+              <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-xl border border-rose-100 relative">
+                <div class="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-gray-100">
+                  <img id="hero-banner-img" src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Personalized Acrylic Gift" class="w-full h-full object-cover" />
+                  <div class="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur px-4 py-2.5 rounded-xl shadow-lg flex items-center justify-between">
+                    <div>
+                      <p class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Bestseller of the Week</p>
+                      <p class="text-xs font-bold text-gray-800">Spotify Acrylic LED Frame with Stand</p>
+                    </div>
+                    <span class="text-sm font-black text-brand-600">₹599</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5 mt-3">
+                  <div class="bg-rose-50/60 p-2.5 rounded-xl flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center text-brand-600 text-sm">
+                      <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-bold text-gray-800">Photo Proofing</p>
+                      <p class="text-[10px] text-gray-500">Preview before print</p>
+                    </div>
+                  </div>
+                  <div class="bg-amber-50/60 p-2.5 rounded-xl flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 text-sm">
+                      <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-bold text-gray-800">Gift Packaging</p>
+                      <p class="text-[10px] text-gray-500">Premium safe box</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK CATEGORY PILLS (Like ModernGifts.in) -->
+    <section class="bg-white border-b border-gray-100 py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Browse by Category</h2>
+          <span class="text-xs text-brand-600 font-semibold cursor-pointer" onclick="filterCategory('All')">View All</span>
+        </div>
+        <div class="flex items-center space-x-3 overflow-x-auto no-scrollbar py-2" id="categoryPillContainer">
+          <!-- Dynamic category pills injected here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- BUDGET FILTERS SECTION (Gifts Under ₹199, ₹499, ₹799, ₹999) -->
+    <section class="py-5 bg-gradient-to-b from-rose-50/40 to-transparent border-b border-rose-100/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-tags text-brand-600"></i> Gifts by Budget
+            </h3>
+            <p class="text-xs text-gray-500">Thoughtful picks crafted for every budget</p>
+          </div>
+          <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar">
+            <button onclick="filterBudget('all')" class="budget-pill active px-3.5 py-1.5 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700 hover:border-brand-500 transition">All Budgets</button>
+            <button onclick="filterBudget(199)" class="budget-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700 hover:border-brand-500 transition">Under ₹199</button>
+            <button onclick="filterBudget(499)" class="budget-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700 hover:border-brand-500 transition">Under ₹499</button>
+            <button onclick="filterBudget(799)" class="budget-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700 hover:border-brand-500 transition">Under ₹799</button>
+            <button onclick="filterBudget(999)" class="budget-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-white border border-gray-200 text-gray-700 hover:border-brand-500 transition">Under ₹999</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT CATALOG & GRID -->
+    <section id="catalogSection" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Catalog Header & Secondary Filters -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 gap-4 border-b border-gray-200">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight font-serif" id="currentFilterTitle">All Personalized Gifts</h2>
+          <p class="text-xs text-gray-500 mt-1" id="productCountLabel">Showing popular products available for instant customization</p>
+        </div>
+        
+        <!-- Occasion Filter Tabs -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar bg-gray-100 p-1 rounded-xl">
+          <button onclick="filterOccasion('All')" class="occasion-tab active px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-gray-900 shadow-sm transition">All Occasions</button>
+          <button onclick="filterOccasion('Birthday')" class="occasion-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 transition">🎂 Birthday</button>
+          <button onclick="filterOccasion('Anniversary')" class="occasion-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 transition">💍 Anniversary</button>
+          <button onclick="filterOccasion('Love')" class="occasion-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 transition">❤️ Love</button>
+          <button onclick="filterOccasion('Friends')" class="occasion-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 transition">🤝 Friends</button>
+        </div>
+      </div>
+
+      <!-- PRODUCT CARDS GRID -->
+      <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 pt-8">
+        <!-- Products dynamically rendered here -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-16 space-y-4">
+        <div class="w-16 h-16 bg-rose-50 text-brand-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <h4 class="text-base font-bold text-gray-800">No gifts found matching your filter</h4>
+        <p class="text-xs text-gray-500">Try resetting filters or search for another keyword.</p>
+        <button onclick="resetAllFilters()" class="text-xs font-bold text-brand-600 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-xl">Reset All Filters</button>
+      </div>
+
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="py-14 bg-white border-t border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <h3 class="text-xs font-bold text-brand-600 uppercase tracking-widest">Effortless Ordering</h3>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 font-serif mt-1">How Customization Works</h2>
+          <p class="text-xs sm:text-sm text-gray-500 mt-2">Get your bespoke gift crafted in three simple steps</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div class="p-6 rounded-2xl bg-rose-50/50 border border-rose-100/60">
+            <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center mx-auto mb-4 text-xl shadow-md shadow-rose-200">
+              1
+            </div>
+            <h4 class="font-bold text-gray-900 mb-1">Pick Your Gift Style</h4>
+            <p class="text-xs text-gray-500">Select acrylic plaques, Spotify frames, mugs, wooden engravings, or hampers.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-amber-50/50 border border-amber-100/60">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center mx-auto mb-4 text-xl shadow-md shadow-amber-200">
+              2
+            </div>
+            <h4 class="font-bold text-gray-900 mb-1">Send Photos & Text</h4>
+            <p class="text-xs text-gray-500">Provide names, dates, custom Spotify song title, or photos on WhatsApp or web order.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100/60">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-4 text-xl shadow-md shadow-emerald-200">
+              3
+            </div>
+            <h4 class="font-bold text-gray-900 mb-1">Preview & Fast Dispatch</h4>
+            <p class="text-xs text-gray-500">We share digital mockup proof before printing. Safely packaged and dispatched to you.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST & FEATURES SECTION -->
+    <section class="py-12 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="p-4">
+            <i class="fa-solid fa-layer-group text-2xl text-brand-600 mb-2"></i>
+            <h5 class="text-xs font-bold text-gray-900">HD UV Printing</h5>
+            <p class="text-[11px] text-gray-500 mt-0.5">Vibrant, waterproof, and fade-resistant</p>
+          </div>
+          <div class="p-4">
+            <i class="fa-solid fa-shield-halved text-2xl text-amber-500 mb-2"></i>
+            <h5 class="text-xs font-bold text-gray-900">Damage-Free Packing</h5>
+            <p class="text-[11px] text-gray-500 mt-0.5">Multi-layer bubble wrap & wooden bracing</p>
+          </div>
+          <div class="p-4">
+            <i class="fa-solid fa-bolt text-2xl text-rose-500 mb-2"></i>
+            <h5 class="text-xs font-bold text-gray-900">Swift Turnaround</h5>
+            <p class="text-[11px] text-gray-500 mt-0.5">Crafted & shipped within 24-48 hours</p>
+          </div>
+          <div class="p-4">
+            <i class="fa-solid fa-headset text-2xl text-emerald-600 mb-2"></i>
+            <h5 class="text-xs font-bold text-gray-900">Direct WhatsApp Support</h5>
+            <p class="text-[11px] text-gray-500 mt-0.5">Friendly assistance on custom sizes</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTAINER: ADMIN PANEL & DASHBOARD (ADMIN OPTIONS) -->
+  <!-- ========================================================================= -->
+  <section id="view-admin" class="flex-1 hidden bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- Admin Top Navigation & Stats -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 gap-4 border-b border-gray-200">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+            <h2 class="text-2xl font-bold text-gray-900">Admin Control Center</h2>
+          </div>
+          <p class="text-xs text-gray-500 mt-0.5">Manage products, incoming orders, and store settings for <strong>Success Computech</strong></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="switchView('viewer')" class="bg-white border border-gray-300 text-gray-700 text-xs font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-eye text-brand-600"></i> Open Live Storefront
+          </button>
+          <button onclick="exportDataBackup()" class="bg-gray-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-gray-900 transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-download"></i> Backup Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick KPI Counters -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <p class="text-xs font-semibold text-gray-500 uppercase">Live Products</p>
+            <span class="p-1.5 bg-rose-50 text-brand-600 rounded-lg text-xs"><i class="fa-solid fa-cubes"></i></span>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiProductCount">0</p>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1"><i class="fa-solid fa-circle-check mr-1"></i>Active in Catalog</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <p class="text-xs font-semibold text-gray-500 uppercase">Total Orders</p>
+            <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg text-xs"><i class="fa-solid fa-cart-flatbed"></i></span>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiOrderCount">0</p>
+          <p class="text-[11px] text-gray-500 font-medium mt-1">Recorded via Storefront</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <p class="text-xs font-semibold text-gray-500 uppercase">Store Revenue</p>
+            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+          </div>
+          <p class="text-2xl font-extrabold text-gray-900 mt-2" id="kpiRevenue">₹0</p>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1">Estimated Sales Value</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <p class="text-xs font-semibold text-gray-500 uppercase">WhatsApp Studio</p>
+            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs"><i class="fa-brands fa-whatsapp"></i></span>
+          </div>
+          <p class="text-sm font-bold text-gray-900 mt-2 truncate" id="kpiPhone">919944444834</p>
+          <p class="text-[11px] text-gray-500 font-medium mt-1">Direct order gateway</p>
+        </div>
+      </div>
+
+      <!-- Admin Tab Switcher -->
+      <div class="flex items-center space-x-2 border-b border-gray-200 mb-6">
+        <button onclick="switchAdminTab('products')" id="tabBtn-products" class="admin-tab-btn active px-4 py-3 font-bold text-xs sm:text-sm text-brand-600 border-b-2 border-brand-600 flex items-center gap-2">
+          <i class="fa-solid fa-boxes-stacked"></i> Products Management (<span id="adminTabProductCount">0</span>)
+        </button>
+        <button onclick="switchAdminTab('orders')" id="tabBtn-orders" class="admin-tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-list"></i> Customer Orders (<span id="adminTabOrderCount">0</span>)
+        </button>
+        <button onclick="switchAdminTab('settings')" id="tabBtn-settings" class="admin-tab-btn px-4 py-3 font-semibold text-xs sm:text-sm text-gray-500 hover:text-gray-800 border-b-2 border-transparent flex items-center gap-2">
+          <i class="fa-solid fa-gear"></i> Store & WhatsApp Settings
+        </button>
+      </div>
+
+      <!-- TAB 1: PRODUCT MANAGEMENT -->
+      <div id="adminTab-products" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200">
+          <div class="flex items-center gap-2">
+            <input type="text" id="adminProductSearch" oninput="filterAdminProducts()" placeholder="Filter product by name or category..." class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs w-64 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+          </div>
+          <button onclick="openProductModal('add')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+            <i class="fa-solid fa-plus"></i> Add New Gift Item
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="py-3.5 px-4">Item</th>
+                  <th class="py-3.5 px-4">Category</th>
+                  <th class="py-3.5 px-4">Price (Offer / MRP)</th>
+                  <th class="py-3.5 px-4">Occasion</th>
+                  <th class="py-3.5 px-4">Badge</th>
+                  <th class="py-3.5 px-4">Stock Status</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductTableBody" class="divide-y divide-gray-100">
+                <!-- Admin product rows injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ORDER TRACKING -->
+      <div id="adminTab-orders" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+            <div>
+              <h4 class="font-bold text-sm text-gray-800">Recorded Customer Orders</h4>
+              <p class="text-[11px] text-gray-500">Orders placed through the website or WhatsApp checkout</p>
+            </div>
+            <button onclick="clearAllOrders()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold">
+              <i class="fa-solid fa-trash-can mr-1"></i> Clear Orders
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="py-3.5 px-4">Order ID & Date</th>
+                  <th class="py-3.5 px-4">Customer Details</th>
+                  <th class="py-3.5 px-4">Items & Customization</th>
+                  <th class="py-3.5 px-4">Total Amount</th>
+                  <th class="py-3.5 px-4">Status</th>
+                  <th class="py-3.5 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrderTableBody" class="divide-y divide-gray-100">
+                <!-- Orders injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: STORE SETTINGS -->
+      <div id="adminTab-settings" class="hidden">
+        <div class="max-w-3xl bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">Storefront & Business Information</h3>
+            <p class="text-xs text-gray-500">Configure your business identity in Tiruppur for WhatsApp checkout and headers.</p>
+          </div>
+
+          <form id="storeSettingsForm" onsubmit="saveStoreSettings(event)" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">Company / Brand Name</label>
+                <input type="text" id="settingBrandName" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+              </div>
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">Brand Tagline</label>
+                <input type="text" id="settingTagline" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">WhatsApp Business Number (with 91 country code)</label>
+                <input type="text" id="settingWhatsapp" placeholder="919944444834" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+                <span class="text-[10px] text-gray-400">All customer WhatsApp orders will redirect to this number.</span>
+              </div>
+              <div>
+                <label class="font-bold text-gray-700 block mb-1">UPI ID for Direct Payments</label>
+                <input type="text" id="settingUpiId" placeholder="successcomputech@upi" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Store / Studio Address</label>
+              <textarea id="settingAddress" rows="2" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500"></textarea>
+            </div>
+
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Announcement Bar Text</label>
+              <input type="text" id="settingAnnouncement" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+              <button type="button" onclick="restoreDemoDefaults()" class="text-xs text-gray-500 hover:text-rose-600 font-semibold">
+                <i class="fa-solid fa-rotate-left mr-1"></i> Reset to Default Sample Catalog
+              </button>
+              <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-sm transition">
+                Save Store Settings
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: PRODUCT CUSTOMIZATION & ORDER PREVIEW (VIEWER) -->
+  <!-- ========================================================================= -->
+  <div id="productModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl animate-fade-in max-h-[90vh] flex flex-col">
+      <div class="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-600"></span>
+          <h3 class="font-bold text-base sm:text-lg text-gray-900" id="modalProductTitle">Product Title</h3>
+        </div>
+        <button onclick="closeProductModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 h-56 sm:h-64 relative">
+            <img id="modalProductImage" src="" alt="" class="w-full h-full object-cover" />
+            <span id="modalProductBadge" class="absolute top-2.5 left-2.5 bg-brand-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Bestseller</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl font-black text-brand-600" id="modalProductPrice">₹499</span>
+              <span class="text-xs text-gray-400 line-through font-semibold" id="modalProductOriginalPrice">₹899</span>
+              <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md" id="modalDiscountPct">45% OFF</span>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed" id="modalProductDesc">Description goes here</p>
+
+            <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100 space-y-1.5 text-xs">
+              <p class="font-bold text-brand-700 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-check"></i> 100% Quality Guaranteed
+              </p>
+              <p class="text-gray-500 text-[11px]">UV Flatbed printed on imported glossy acrylic / wood stand.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customization Details Form -->
+        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-3">
+          <h4 class="text-xs font-extrabold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-paintbrush text-brand-600"></i> Personalization Options
+          </h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Recipient / Couple Name(s)</label>
+              <input type="text" id="custNameInput" placeholder="e.g. Anand & Ranju" class="w-full p-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <label class="font-bold text-gray-700 block mb-1">Special Date / Song / Spotify Code</label>
+              <input type="text" id="custSongInput" placeholder="e.g. 20-Aug-2016 or Song Name" class="w-full p-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+            </div>
+          </div>
+
+          <div class="text-xs">
+            <label class="font-bold text-gray-700 block mb-1">Photo Upload Note / Wish Message</label>
+            <textarea id="custNoteInput" rows="2" placeholder="Tell us if you will share photo via WhatsApp or any specific design instructions..." class="w-full p-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 sm:p-6 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-center sm:text-left">
+          <span class="text-xs text-gray-500">Unit Price</span>
+          <p class="text-lg font-black text-gray-900" id="modalFooterPrice">₹499</p>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="addToCartFromModal()" class="flex-1 sm:flex-none bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 font-bold text-xs px-4 py-3 rounded-xl transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cart-plus text-brand-600"></i> Add to Cart
+          </button>
+          <button onclick="directOrderWhatsAppFromModal()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD / EDIT PRODUCT (ADMIN) -->
+  <!-- ========================================================================= -->
+  <div id="adminProductModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="font-bold text-base text-gray-900" id="adminModalTitle">Add New Gift Product</h3>
+        <button onclick="closeAdminProductModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="productForm" onsubmit="saveAdminProduct(event)" class="p-5 overflow-y-auto space-y-4 text-xs">
+        <input type="hidden" id="editProductId" />
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Product Title</label>
+          <input type="text" id="adminProdTitle" placeholder="e.g. Acrylic Spotify Scan Frame" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Category</label>
+            <select id="adminProdCategory" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
+              <option value="Acrylic">Acrylic Frames</option>
+              <option value="Frames">Photo Frames</option>
+              <option value="Mugs">Personalized Mugs</option>
+              <option value="Keychains">Custom Keychains</option>
+              <option value="Hampers">Gift Hampers</option>
+              <option value="Puzzles">Photo Puzzles</option>
+              <option value="Lighting">Lamps & Light Stands</option>
+              <option value="Combos">Combos & Specials</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Occasion / Theme</label>
+            <select id="adminProdOccasion" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required>
+              <option value="All">All Occasions</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Anniversary">Anniversary</option>
+              <option value="Love">Love & Valentine</option>
+              <option value="Friends">Friends & Family</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Offer Price (₹)</label>
+            <input type="number" id="adminProdPrice" placeholder="599" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Original MRP (₹)</label>
+            <input type="number" id="adminProdMRP" placeholder="899" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Image URL (Unsplash or direct image link)</label>
+          <input type="url" id="adminProdImage" placeholder="https://images.unsplash.com/..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Badge Tag</label>
+          <input type="text" id="adminProdBadge" placeholder="e.g. Bestseller, Trending, 40% OFF" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Description & Specs</label>
+          <textarea id="adminProdDesc" rows="3" placeholder="Specs, dimensions, acrylic grade, photo requirements..." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="adminProdInStock" class="w-4 h-4 text-brand-600 rounded" checked />
+          <label for="adminProdInStock" class="font-bold text-gray-700">Item is in stock and visible to customers</label>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeAdminProductModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-sm">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE-OVER CART DRAWER -->
+  <!-- ========================================================================= -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-brand-600 text-lg"></i>
+            <h3 class="font-bold text-base text-gray-900">Your Shopping Cart</h3>
+          </div>
+          <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white hover:bg-gray-200 text-gray-600 flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div id="cartItemList" class="flex-1 overflow-y-auto p-5 space-y-4">
+          <!-- Cart items rendered dynamically -->
+        </div>
+
+        <!-- Cart Summary & Checkout -->
+        <div class="p-5 border-t border-gray-200 bg-gray-50 space-y-4">
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between text-gray-500">
+              <span>Subtotal</span>
+              <span id="cartSubtotal" class="font-bold text-gray-800">₹0</span>
+            </div>
+            <div class="flex justify-between text-gray-500">
+              <span>Delivery Charges</span>
+              <span class="text-emerald-600 font-bold">FREE (Special Launch)</span>
+            </div>
+            <div class="flex justify-between text-sm font-black text-gray-900 pt-2 border-t border-gray-200">
+              <span>Total Payable</span>
+              <span id="cartTotal" class="text-brand-600">₹0</span>
+            </div>
+          </div>
+
+          <!-- Customer Details for WhatsApp order -->
+          <div class="space-y-2 text-xs">
+            <input type="text" id="orderCustomerName" placeholder="Your Full Name" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs" />
+            <input type="text" id="orderCustomerPhone" placeholder="Mobile Number (e.g. 9876543210)" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs" />
+            <input type="text" id="orderDeliveryAddress" placeholder="Delivery Address & Pincode (Tiruppur / Tamil Nadu / All India)" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs" />
+          </div>
+
+          <button onclick="completeCheckout('whatsapp')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Send Order via WhatsApp</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <div class="space-y-3">
+          <div class="flex items-center space-x-2 text-white font-bold text-lg">
+            <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white text-sm">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+            <span id="footerBrandName">Success Computech</span>
+          </div>
+          <p class="text-gray-400 text-xs leading-relaxed" id="footerBrandTagline">
+            Specialized in custom photo frames, Spotify acrylic gifts, laser-engraved plaques, digital printing, and photo restoration in Tiruppur.
+          </p>
+          <div class="flex items-center space-x-3 text-gray-400 text-base pt-2">
+            <a href="#" class="hover:text-rose-400"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" class="hover:text-blue-400"><i class="fa-brands fa-facebook"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold text-sm mb-3">Gift Categories</h4>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="filterCategory('Acrylic')" class="hover:text-white">Acrylic Spotify Plaques</a></li>
+            <li><a href="javascript:void(0)" onclick="filterCategory('Frames')" class="hover:text-white">Photo Frames & Collages</a></li>
+            <li><a href="javascript:void(0)" onclick="filterCategory('Mugs')" class="hover:text-white">Magic & Ceramic Mugs</a></li>
+            <li><a href="javascript:void(0)" onclick="filterCategory('Keychains')" class="hover:text-white">Metal & QR Keychains</a></li>
+            <li><a href="javascript:void(0)" onclick="filterCategory('Hampers')" class="hover:text-white">Birthday & Love Hampers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold text-sm mb-3">Customer Care</h4>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="scrollToProducts()" class="hover:text-white">Browse Full Catalog</a></li>
+            <li><a href="javascript:void(0)" onclick="toggleCartDrawer()" class="hover:text-white">View Cart & Checkout</a></li>
+            <li><a href="javascript:void(0)" onclick="switchView('admin')" class="hover:text-white">Admin Management</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-white">Shipping & Safe Acrylic Packing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold text-sm mb-3">Studio Location</h4>
+          <p class="text-gray-300" id="footerAddress">Tiruppur, Tamil Nadu, India</p>
+          <p class="text-gray-400 mt-2">WhatsApp Order: <span id="footerPhone" class="text-emerald-400 font-bold">+91 98765 43210</span></p>
+          <div class="mt-4 p-3 rounded-xl bg-gray-800/80 border border-gray-700">
+            <p class="text-[11px] text-gray-300 font-semibold">Need urgent customization for an anniversary or birthday?</p>
+            <a id="footerDirectWa" href="https://wa.me/919944444834" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
+              <i class="fa-brands fa-whatsapp mr-1"></i> Send Instant Message
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-gray-800 text-center flex flex-col sm:flex-row items-center justify-between gap-2 text-gray-500">
+        <p>&copy; 2026 Success Computech. All Rights Reserved.</p>
+        <p>Crafted with pride for personalized gifts in Tiruppur.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- APPLICATION JAVASCRIPT LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- DEFAULT CATALOG SEED DATA ---
+    const DEFAULT_PRODUCTS = [
+      {
+        id: 'p1',
+        title: 'Spotify Acrylic LED Frame with Custom Scannable Song',
+        category: 'Acrylic',
+        occasion: 'Love',
+        price: 599,
+        mrp: 899,
+        badge: 'Bestseller',
+        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80',
+        desc: 'Premium crystal-clear 4mm acrylic with wooden LED base. Customized with your favourite picture, song name, artist, and scannable Spotify code.',
+        inStock: true
+      },
+      {
+        id: 'p2',
+        title: 'Customized Wooden Moon Lamp Frame',
+        category: 'Lighting',
+        occasion: 'Anniversary',
+        price: 490,
+        mrp: 799,
+        badge: 'Trending',
+        image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
+        desc: 'Romantic lunar lamp texture with customized high-resolution photo engraving. Warm ambient light suitable for bedside tables.',
+        inStock: true
+      },
+      {
+        id: 'p3',
+        title: 'Personalized A4 Couple Photo Puzzle Frame',
+        category: 'Puzzles',
+        occasion: 'Anniversary',
+        price: 299,
+        mrp: 650,
+        badge: 'Fun Gift',
+        image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=600&q=80',
+        desc: 'Interactive 120-piece puzzle printed with your high-definition photo. Assembled and framed ready for wall hanging.',
+        inStock: true
+      },
+      {
+        id: 'p4',
+        title: 'Calendar Mug with Birthday Photo & Tamil / English Date',
+        category: 'Mugs',
+        occasion: 'Birthday',
+        price: 349,
+        mrp: 425,
+        badge: 'Popular',
+        image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+        desc: 'High-grade ceramic glossy mug marked with the recipient’s birth date circled on a calendar with a personal wish message.',
+        inStock: true
+      },
+      {
+        id: 'p5',
+        title: 'Secret Voice Metal Keychain with QR Code',
+        category: 'Keychains',
+        occasion: 'Love',
+        price: 199,
+        mrp: 399,
+        badge: 'Budget Pick',
+        image: 'https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&w=600&q=80',
+        desc: 'Durable laser-engraved metal keychain with a photo on one side and a scannable QR code linking to your custom audio wish or video message.',
+        inStock: true
+      },
+      {
+        id: 'p6',
+        title: 'Luxury Birthday Surprise Hamper with Name Magnet & Treats',
+        category: 'Hampers',
+        occasion: 'Birthday',
+        price: 999,
+        mrp: 1899,
+        badge: 'Mega Deal',
+        image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80',
+        desc: 'Includes personalized chocolate box, name magnet keepsake, mini photo album, and greeting card in a luxury gift box.',
+        inStock: true
+      },
+      {
+        id: 'p7',
+        title: 'King & Queen Dual Couple Photo Frames (Set of 2)',
+        category: 'Frames',
+        occasion: 'Anniversary',
+        price: 799,
+        mrp: 1200,
+        badge: 'Top Choice',
+        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80',
+        desc: 'A pair of matching royal crown themed black synthetic wood frames crafted for wedding and anniversary milestones.',
+        inStock: true
+      },
+      {
+        id: 'p8',
+        title: 'Custom Photo Polaroid Transparent Keychain',
+        category: 'Keychains',
+        occasion: 'Friends',
+        price: 149,
+        mrp: 299,
+        badge: 'Under ₹199',
+        image: 'https://images.unsplash.com/photo-1582845512747-e42001c95638?auto=format&fit=crop&w=600&q=80',
+        desc: 'Double-sided transparent acrylic mini polaroid keychain. Pocket-sized keepsake for best friends and couples.',
+        inStock: true
+      },
+      {
+        id: 'p9',
+        title: 'Acrylic Daily Photo Desk Calendar with Wooden Stand',
+        category: 'Acrylic',
+        occasion: 'Birthday',
+        price: 749,
+        mrp: 1299,
+        badge: 'New Arrival',
+        image: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=600&q=80',
+        desc: 'Elegant desktop acrylic calendar stand with monthly milestone cards featuring your favourite family moments.',
+        inStock: true
+      },
+      {
+        id: 'p10',
+        title: 'Vintage Friendship Wooden Collage Frame',
+        category: 'Frames',
+        occasion: 'Friends',
+        price: 499,
+        mrp: 750,
+        badge: 'Friendship Special',
+        image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
+        desc: 'Rustic wood finish photo collage holding 6 cherished snapshots with personalized quote and names.',
+        inStock: true
+      }
+    ];
+
+    const DEFAULT_SETTINGS = {
+      brandName: 'Success Computech',
+      brandTagline: 'Personalized Gifts • Photo Restoration • Tiruppur',
+      whatsapp: '919944444834',
+      upiId: 'successcomputech@upi',
+      address: 'Success Computech, Near Old Bus Stand / Railway Station, Tiruppur, Tamil Nadu - 641604',
+      announcement: '🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.'
+    };
+
+    // --- APPLICATION STATE ---
+    let state = {
+      view: 'viewer', // 'viewer' or 'admin'
+      adminTab: 'products',
+      products: [],
+      orders: [],
+      settings: {},
+      cart: [],
+      activeCategory: 'All',
+      activeOccasion: 'All',
+      activeBudget: 'all',
+      searchQuery: '',
+      currentSelectedProduct: null
+    };
+
+    // --- INITIALIZATION ---
+    function initApp() {
+      // Load products
+      const savedProducts = localStorage.getItem('sc_products');
+      state.products = savedProducts ? JSON.parse(savedProducts) : [...DEFAULT_PRODUCTS];
+
+      // Load settings
+      const savedSettings = localStorage.getItem('sc_settings');
+      state.settings = savedSettings ? JSON.parse(savedSettings) : {...DEFAULT_SETTINGS};
+
+      // Load orders
+      const savedOrders = localStorage.getItem('sc_orders');
+      state.orders = savedOrders ? JSON.parse(savedOrders) : [];
+
+      // Load cart
+      const savedCart = localStorage.getItem('sc_cart');
+      state.cart = savedCart ? JSON.parse(savedCart) : [];
+
+      applySettingsToUI();
+      renderCategoryPills();
+      renderViewerProducts();
+      updateCartBadge();
+      updateAdminDashboard();
+    }
+
+    function saveStateToStorage() {
+      localStorage.setItem('sc_products', JSON.stringify(state.products));
+      localStorage.setItem('sc_settings', JSON.stringify(state.settings));
+      localStorage.setItem('sc_orders', JSON.stringify(state.orders));
+      localStorage.setItem('sc_cart', JSON.stringify(state.cart));
+    }
+
+    // --- UI VIEW SWITCHING ---
+    function switchView(target) {
+      state.view = target;
+      const viewer = document.getElementById('view-customer');
+      const admin = document.getElementById('view-admin');
+      const toggleText = document.getElementById('viewToggleText');
+
+      if (target === 'admin') {
+        viewer.classList.add('hidden');
+        admin.classList.remove('hidden');
+        toggleText.textContent = 'Storefront';
+        updateAdminDashboard();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        admin.classList.add('hidden');
+        viewer.classList.remove('hidden');
+        toggleText.textContent = 'Admin Mode';
+        renderViewerProducts();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function toggleMainView() {
+      if (state.view === 'viewer') {
+        switchView('admin');
+      } else {
+        switchView('viewer');
+      }
+    }
+
+    function switchAdminTab(tabName) {
+      state.adminTab = tabName;
+      ['products', 'orders', 'settings'].forEach(t => {
+        const tabContent = document.getElementById(`adminTab-${t}`);
+        const tabBtn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabName) {
+          tabContent.classList.remove('hidden');
+          tabBtn.classList.add('active', 'text-brand-600', 'border-brand-600');
+          tabBtn.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          tabContent.classList.add('hidden');
+          tabBtn.classList.remove('active', 'text-brand-600', 'border-brand-600');
+          tabBtn.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+    }
+
+    // --- APPLY SETTINGS TO UI ---
+    function applySettingsToUI() {
+      document.getElementById('nav-brand-name').textContent = state.settings.brandName;
+      document.getElementById('nav-brand-tagline').textContent = state.settings.brandTagline;
+      document.getElementById('footerBrandName').textContent = state.settings.brandName;
+      document.getElementById('footerBrandTagline').textContent = state.settings.brandTagline;
+      document.getElementById('footerAddress').textContent = state.settings.address;
+      document.getElementById('footerPhone').textContent = `+${state.settings.whatsapp}`;
+      
+      const waUrl = `https://wa.me/${state.settings.whatsapp.replace(/[^0-9]/g, '')}`;
+      document.getElementById('navWhatsappBtn').href = waUrl;
+      document.getElementById('footerDirectWa').href = waUrl;
+
+      // Settings form values
+      document.getElementById('settingBrandName').value = state.settings.brandName;
+      document.getElementById('settingTagline').value = state.settings.brandTagline;
+      document.getElementById('settingWhatsapp').value = state.settings.whatsapp;
+      document.getElementById('settingUpiId').value = state.settings.upiId || '';
+      document.getElementById('settingAddress').value = state.settings.address;
+      document.getElementById('settingAnnouncement').value = state.settings.announcement;
+    }
+
+    function saveStoreSettings(e) {
+      e.preventDefault();
+      state.settings = {
+        brandName: document.getElementById('settingBrandName').value.trim(),
+        brandTagline: document.getElementById('settingTagline').value.trim(),
+        whatsapp: document.getElementById('settingWhatsapp').value.trim(),
+        upiId: document.getElementById('settingUpiId').value.trim(),
+        address: document.getElementById('settingAddress').value.trim(),
+        announcement: document.getElementById('settingAnnouncement').value.trim()
+      };
+      saveStateToStorage();
+      applySettingsToUI();
+      alert('Store settings saved successfully! All WhatsApp order links have been updated.');
+    }
+
+    // --- CATEGORY PILLS ---
+    const CATEGORIES = [
+      { name: 'All', icon: 'fa-cubes' },
+      { name: 'Acrylic', icon: 'fa-wand-magic-sparkles' },
+      { name: 'Frames', icon: 'fa-image' },
+      { name: 'Mugs', icon: 'fa-mug-hot' },
+      { name: 'Keychains', icon: 'fa-key' },
+      { name: 'Hampers', icon: 'fa-box-open' },
+      { name: 'Puzzles', icon: 'fa-puzzle-piece' },
+      { name: 'Lighting', icon: 'fa-lightbulb' }
+    ];
+
+    function renderCategoryPills() {
+      const container = document.getElementById('categoryPillContainer');
+      container.innerHTML = CATEGORIES.map(cat => `
+        <button onclick="filterCategory('${cat.name}')" class="category-pill flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${state.activeCategory === cat.name ? 'bg-brand-600 text-white shadow-md shadow-rose-200' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
+          <i class="fa-solid ${cat.icon}"></i>
+          <span>${cat.name}</span>
+        </button>
+      `).join('');
+    }
+
+    // --- FILTER & SEARCH LOGIC ---
+    function filterCategory(catName) {
+      state.activeCategory = catName;
+      document.getElementById('currentFilterTitle').textContent = catName === 'All' ? 'All Personalized Gifts' : `${catName} Gifts Collection`;
+      renderCategoryPills();
+      renderViewerProducts();
+      scrollToProducts();
+    }
+
+    function filterOccasion(occasion) {
+      state.activeOccasion = occasion;
+      document.querySelectorAll('.occasion-tab').forEach(el => {
+        if (el.textContent.includes(occasion) || (occasion === 'All' && el.textContent.includes('All'))) {
+          el.classList.add('active', 'bg-white', 'text-gray-900', 'shadow-sm');
+          el.classList.remove('text-gray-600');
+        } else {
+          el.classList.remove('active', 'bg-white', 'text-gray-900', 'shadow-sm');
+          el.classList.add('text-gray-600');
+        }
+      });
+      renderViewerProducts();
+    }
+
+    function filterBudget(limit) {
+      state.activeBudget = limit;
+      document.querySelectorAll('.budget-pill').forEach(btn => {
+        if ((limit === 'all' && btn.textContent.includes('All')) || btn.textContent.includes(`₹${limit}`)) {
+          btn.classList.add('active', 'bg-brand-600', 'text-white', 'border-brand-600');
+          btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+        } else {
+          btn.classList.remove('active', 'bg-brand-600', 'text-white', 'border-brand-600');
+          btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+        }
+      });
+      renderViewerProducts();
+    }
+
+    function handleSearch() {
+      state.searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+      renderViewerProducts();
+    }
+
+    function handleMobileSearch() {
+      state.searchQuery = document.getElementById('mobileSearchInput').value.toLowerCase().trim();
+      renderViewerProducts();
+    }
+
+    function resetAllFilters() {
+      state.activeCategory = 'All';
+      state.activeOccasion = 'All';
+      state.activeBudget = 'all';
+      state.searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('mobileSearchInput').value = '';
+      filterBudget('all');
+      filterOccasion('All');
+      filterCategory('All');
+    }
+
+    function scrollToProducts() {
+      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- VIEWER PRODUCTS RENDERING ---
+    function renderViewerProducts() {
+      const grid = document.getElementById('productGrid');
+      const empty = document.getElementById('emptyState');
+
+      let filtered = state.products.filter(p => p.inStock);
+
+      // Category filter
+      if (state.activeCategory !== 'All') {
+        filtered = filtered.filter(p => p.category === state.activeCategory);
+      }
+
+      // Occasion filter
+      if (state.activeOccasion !== 'All') {
+        filtered = filtered.filter(p => p.occasion === state.activeOccasion || p.occasion === 'All');
+      }
+
+      // Budget filter
+      if (state.activeBudget !== 'all') {
+        const maxPrice = Number(state.activeBudget);
+        filtered = filtered.filter(p => p.price <= maxPrice);
+      }
+
+      // Search query
+      if (state.searchQuery) {
+        filtered = filtered.filter(p => 
+          p.title.toLowerCase().includes(state.searchQuery) ||
+          p.desc.toLowerCase().includes(state.searchQuery) ||
+          p.category.toLowerCase().includes(state.searchQuery)
+        );
+      }
+
+      document.getElementById('productCountLabel').textContent = `Showing ${filtered.length} personalized gifts ready for preview & customization`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = filtered.map(product => {
+        const discount = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+        return `
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+            <!-- Product Image -->
+            <div class="relative h-44 sm:h-52 bg-gray-100 overflow-hidden cursor-pointer" onclick="openProductCustomizer('${product.id}')">
+              <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
+                ${product.badge ? `<span class="bg-brand-600 text-white text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-0.5 rounded-full shadow-sm">${product.badge}</span>` : ''}
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 bg-white/90 backdrop-blur text-gray-800 text-[11px] font-bold px-2 py-0.5 rounded-lg shadow-sm">
+                ${discount}% OFF
+              </span>
+            </div>
+
+            <!-- Product Body -->
+            <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5">
+              <div>
+                <div class="flex items-center justify-between text-[11px] text-gray-400 mb-1">
+                  <span class="uppercase tracking-wider font-semibold text-brand-600">${product.category}</span>
+                  <span class="flex items-center text-amber-500 font-bold"><i class="fa-solid fa-star text-[10px] mr-1"></i>4.9</span>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xs sm:text-sm line-clamp-2 leading-snug cursor-pointer hover:text-brand-600 transition" onclick="openProductCustomizer('${product.id}')">
+                  ${product.title}
+                </h3>
+              </div>
+
+              <!-- Price & Quick CTA -->
+              <div class="pt-2 border-t border-gray-100">
+                <div class="flex items-baseline gap-1.5 mb-2.5">
+                  <span class="text-base sm:text-lg font-black text-gray-900">₹${product.price}</span>
+                  <span class="text-xs text-gray-400 line-through font-medium">₹${product.mrp}</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="openProductCustomizer('${product.id}')" class="w-full py-2 bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-[11px] rounded-xl transition flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Customize
+                  </button>
+                  <button onclick="quickOrderWhatsApp('${product.id}')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-xl transition flex items-center justify-center gap-1 shadow-sm">
+                    <i class="fa-brands fa-whatsapp text-xs"></i> Order
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- PRODUCT CUSTOMIZER MODAL ---
+    function openProductCustomizer(productId) {
+      const p = state.products.find(item => item.id === productId);
+      if (!p) return;
+      state.currentSelectedProduct = p;
+
+      document.getElementById('modalProductTitle').textContent = p.title;
+      document.getElementById('modalProductImage').src = p.image;
+      document.getElementById('modalProductPrice').textContent = `₹${p.price}`;
+      document.getElementById('modalProductOriginalPrice').textContent = `₹${p.mrp}`;
+      document.getElementById('modalFooterPrice').textContent = `₹${p.price}`;
+      document.getElementById('modalProductDesc').textContent = p.desc;
+      document.getElementById('modalProductBadge').textContent = p.badge || p.category;
+
+      const discount = Math.round(((p.mrp - p.price) / p.mrp) * 100);
+      document.getElementById('modalDiscountPct').textContent = `${discount}% OFF`;
+
+      // Clear inputs
+      document.getElementById('custNameInput').value = '';
+      document.getElementById('custSongInput').value = '';
+      document.getElementById('custNoteInput').value = '';
+
+      document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.add('hidden');
+    }
+
+    function addToCartFromModal() {
+      if (!state.currentSelectedProduct) return;
+      const p = state.currentSelectedProduct;
+
+      const customName = document.getElementById('custNameInput').value.trim();
+      const customSong = document.getElementById('custSongInput').value.trim();
+      const customNote = document.getElementById('custNoteInput').value.trim();
+
+      const cartItem = {
+        cartId: 'c_' + Date.now(),
+        productId: p.id,
+        title: p.title,
+        price: p.price,
+        image: p.image,
+        customName,
+        customSong,
+        customNote,
+        quantity: 1
+      };
+
+      state.cart.push(cartItem);
+      saveStateToStorage();
+      updateCartBadge();
+      closeProductModal();
+      toggleCartDrawer();
+    }
+
+    function directOrderWhatsAppFromModal() {
+      if (!state.currentSelectedProduct) return;
+      const p = state.currentSelectedProduct;
+
+      const customName = document.getElementById('custNameInput').value.trim() || 'Not specified';
+      const customSong = document.getElementById('custSongInput').value.trim() || 'Not specified';
+      const customNote = document.getElementById('custNoteInput').value.trim() || 'None';
+
+      const text = `*New Order Request - ${state.settings.brandName}*
+
+` +
+        `*Product:* ${p.title}
+` +
+        `*Price:* ₹${p.price} (MRP: ₹${p.mrp})
+` +
+        `*Personalized Name(s):* ${customName}
+` +
+        `*Special Song / Date:* ${customSong}
+` +
+        `*Instructions:* ${customNote}
+
+` +
+        `Hello ${state.settings.brandName}, I would like to order this custom gift. Please confirm photo upload and preview!`;
+
+      // Record order in system
+      recordOrder([ { title: p.title, price: p.price, customName, customSong } ], p.price, 'Customer via Modal');
+
+      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+      closeProductModal();
+    }
+
+    function quickOrderWhatsApp(productId) {
+      const p = state.products.find(item => item.id === productId);
+      if (!p) return;
+
+      const text = `*Quick Inquiry / Order - ${state.settings.brandName}*
+
+` +
+        `*Product:* ${p.title}
+` +
+        `*Price:* ₹${p.price}
+
+` +
+        `Hi Success Computech, I want to customize this product. Please share sample mockups and photo requirements!`;
+
+      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    function openCustomRequestModal() {
+      const text = `Hi ${state.settings.brandName}, I need a custom gift designed for an upcoming occasion in Tiruppur. Please guide me with available options!`;
+      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // --- CART MANAGEMENT ---
+    function toggleCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      drawer.classList.toggle('hidden');
+      renderCartItems();
+    }
+
+    function updateCartBadge() {
+      const count = state.cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      document.getElementById('cartBadge').textContent = count;
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cartItemList');
+      const subtotalEl = document.getElementById('cartSubtotal');
+      const totalEl = document.getElementById('cartTotal');
+
+      if (state.cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 space-y-3">
+            <i class="fa-solid fa-basket-shopping text-3xl text-gray-300"></i>
+            <p class="text-xs font-bold text-gray-700">Your cart is currently empty</p>
+            <p class="text-[11px] text-gray-400">Add custom gifts to review and place an order</p>
+          </div>
+        `;
+        subtotalEl.textContent = '₹0';
+        totalEl.textContent = '₹0';
+        return;
+      }
+
+      let subtotal = 0;
+      container.innerHTML = state.cart.map((item, idx) => {
+        subtotal += item.price * (item.quantity || 1);
+        return `
+          <div class="flex gap-3 bg-gray-50 p-3 rounded-2xl border border-gray-200/70 text-xs">
+            <img src="${item.image}" alt="" class="w-16 h-16 rounded-xl object-cover border border-gray-200" />
+            <div class="flex-1">
+              <div class="flex items-start justify-between">
+                <h4 class="font-bold text-gray-900 line-clamp-1">${item.title}</h4>
+                <button onclick="removeCartItem(${idx})" class="text-gray-400 hover:text-rose-600 ml-2">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+              </div>
+              <p class="text-brand-600 font-extrabold mt-0.5">₹${item.price}</p>
+              ${item.customName ? `<p class="text-[10px] text-gray-500 mt-1">Name: <span class="font-semibold text-gray-700">${item.customName}</span></p>` : ''}
+              ${item.customSong ? `<p class="text-[10px] text-gray-500">Song/Date: <span class="font-semibold text-gray-700">${item.customSong}</span></p>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      subtotalEl.textContent = `₹${subtotal}`;
+      totalEl.textContent = `₹${subtotal}`;
+    }
+
+    function removeCartItem(idx) {
+      state.cart.splice(idx, 1);
+      saveStateToStorage();
+      updateCartBadge();
+      renderCartItems();
+    }
+
+    function completeCheckout(method) {
+      if (state.cart.length === 0) {
+        alert('Your cart is empty. Please add gifts first!');
+        return;
+      }
+
+      const custName = document.getElementById('orderCustomerName').value.trim() || 'Valued Customer';
+      const custPhone = document.getElementById('orderCustomerPhone').value.trim() || 'Not provided';
+      const address = document.getElementById('orderDeliveryAddress').value.trim() || 'Tiruppur Store Pickup';
+
+      let total = 0;
+      let itemsSummary = '';
+      state.cart.forEach((item, i) => {
+        total += item.price;
+        itemsSummary += `${i + 1}. ${item.title} (₹${item.price})
+` +
+          (item.customName ? `   - Name: ${item.customName}
+` : '') +
+          (item.customSong ? `   - Song/Date: ${item.customSong}
+` : '');
+      });
+
+      const orderMsg = `*Confirmed Cart Order - ${state.settings.brandName}*
+
+` +
+        `*Customer Name:* ${custName}
+` +
+        `*Phone:* ${custPhone}
+` +
+        `*Delivery Address:* ${address}
+
+` +
+        `*Items Ordered:*
+${itemsSummary}
+` +
+        `*Total Amount:* ₹${total}
+
+` +
+        `Please confirm this order and send payment instructions / UPI QR!`;
+
+      // Save to admin order tracker
+      recordOrder(state.cart, total, custName, custPhone, address);
+
+      // Clear cart
+      state.cart = [];
+      saveStateToStorage();
+      updateCartBadge();
+      toggleCartDrawer();
+
+      const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(orderMsg)}`;
+      window.open(url, '_blank');
+    }
+
+    // --- ORDER RECORDING & ADMIN TRACKING ---
+    function recordOrder(items, total, customerName, phone = 'WhatsApp Order', address = 'Tiruppur Delivery') {
+      const newOrder = {
+        orderId: 'SC-' + Math.floor(100000 + Math.random() * 900000),
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        items: items,
+        total: total,
+        customerName: customerName,
+        phone: phone,
+        address: address,
+        status: 'Order Placed'
+      };
+
+      state.orders.unshift(newOrder);
+      saveStateToStorage();
+      updateAdminDashboard();
+    }
+
+    function updateOrderStatus(orderId, newStatus) {
+      const order = state.orders.find(o => o.orderId === orderId);
+      if (order) {
+        order.status = newStatus;
+        saveStateToStorage();
+        updateAdminDashboard();
+      }
+    }
+
+    function clearAllOrders() {
+      if (confirm('Are you sure you want to clear all recorded orders?')) {
+        state.orders = [];
+        saveStateToStorage();
+        updateAdminDashboard();
+      }
+    }
+
+    // --- ADMIN PANEL FUNCTIONS ---
+    function updateAdminDashboard() {
+      // KPIs
+      document.getElementById('kpiProductCount').textContent = state.products.length;
+      document.getElementById('kpiOrderCount').textContent = state.orders.length;
+      document.getElementById('adminTabProductCount').textContent = state.products.length;
+      document.getElementById('adminTabOrderCount').textContent = state.orders.length;
+      document.getElementById('kpiPhone').textContent = `+${state.settings.whatsapp}`;
+
+      const rev = state.orders.reduce((acc, o) => acc + (o.total || 0), 0);
+      document.getElementById('kpiRevenue').textContent = `₹${rev.toLocaleString('en-IN')}`;
+
+      renderAdminProductTable(state.products);
+      renderAdminOrderTable();
+    }
+
+    function renderAdminProductTable(productList) {
+      const tbody = document.getElementById('adminProductTableBody');
+      if (productList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-400 font-medium">No products registered yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = productList.map(p => `
+        <tr class="hover:bg-gray-50/70 transition">
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-3">
+              <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover border border-gray-200" alt="" />
+              <div>
+                <p class="font-bold text-gray-900">${p.title}</p>
+                <p class="text-[10px] text-gray-400">ID: ${p.id}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-4 font-semibold text-gray-700">${p.category}</td>
+          <td class="py-3 px-4">
+            <span class="font-bold text-gray-900">₹${p.price}</span>
+            <span class="text-gray-400 line-through text-[10px] ml-1">₹${p.mrp}</span>
+          </td>
+          <td class="py-3 px-4 font-medium">${p.occasion || 'All'}</td>
+          <td class="py-3 px-4">
+            ${p.badge ? `<span class="bg-rose-100 text-brand-700 px-2 py-0.5 rounded text-[10px] font-bold">${p.badge}</span>` : '<span class="text-gray-400">—</span>'}
+          </td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1 font-semibold ${p.inStock ? 'text-emerald-600' : 'text-rose-600'}">
+              <span class="w-1.5 h-1.5 rounded-full ${p.inStock ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+              ${p.inStock ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-right space-x-1">
+            <button onclick="openProductModal('edit', '${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-blue-600 font-bold" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="deleteProduct('${p.id}')" class="p-1.5 hover:bg-gray-100 rounded text-rose-600 font-bold" title="Delete">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterAdminProducts() {
+      const q = document.getElementById('adminProductSearch').value.toLowerCase().trim();
+      const filtered = state.products.filter(p => 
+        p.title.toLowerCase().includes(q) || 
+        p.category.toLowerCase().includes(q)
+      );
+      renderAdminProductTable(filtered);
+    }
+
+    function renderAdminOrderTable() {
+      const tbody = document.getElementById('adminOrderTableBody');
+      if (state.orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400">No customer orders recorded yet. Orders placed via storefront appear here.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = state.orders.map(o => `
+        <tr class="hover:bg-gray-50/70 transition">
+          <td class="py-3 px-4">
+            <p class="font-bold text-gray-900">${o.orderId}</p>
+            <p class="text-[10px] text-gray-400">${o.date}</p>
+          </td>
+          <td class="py-3 px-4">
+            <p class="font-bold text-gray-800">${o.customerName}</p>
+            <p class="text-[10px] text-gray-500">${o.phone}</p>
+            <p class="text-[10px] text-gray-400 truncate max-w-xs">${o.address}</p>
+          </td>
+          <td class="py-3 px-4">
+            <div class="space-y-1">
+              ${o.items.map(it => `
+                <div class="text-[11px]">
+                  <span class="font-semibold text-gray-800">• ${it.title}</span>
+                  ${it.customName ? `<span class="text-gray-500"> [Name: ${it.customName}]</span>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </td>
+          <td class="py-3 px-4 font-black text-brand-600">₹${o.total}</td>
+          <td class="py-3 px-4">
+            <select onchange="updateOrderStatus('${o.orderId}', this.value)" class="bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 font-bold focus:ring-1 focus:ring-brand-500">
+              <option value="Order Placed" ${o.status === 'Order Placed' ? 'selected' : ''}>⏳ Order Placed</option>
+              <option value="Photo Received" ${o.status === 'Photo Received' ? 'selected' : ''}>📷 Photo Received</option>
+              <option value="In Production" ${o.status === 'In Production' ? 'selected' : ''}>🖨️ In Production</option>
+              <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
+            </select>
+          </td>
+          <td class="py-3 px-4 text-right">
+            <a href="https://wa.me/${o.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(o.customerName)},%20regarding%20your%20custom%20gift%20order%20${o.orderId}%20at%20Success%20Computech..." target="_blank" class="text-emerald-600 hover:text-emerald-700 font-bold p-1">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- ADD / EDIT PRODUCT MODAL ---
+    function openProductModal(mode, productId = null) {
+      const modal = document.getElementById('adminProductModal');
+      const title = document.getElementById('adminModalTitle');
+      const form = document.getElementById('productForm');
+
+      if (mode === 'edit' && productId) {
+        const p = state.products.find(item => item.id === productId);
+        if (!p) return;
+
+        title.textContent = 'Edit Gift Product';
+        document.getElementById('editProductId').value = p.id;
+        document.getElementById('adminProdTitle').value = p.title;
+        document.getElementById('adminProdCategory').value = p.category;
+        document.getElementById('adminProdOccasion').value = p.occasion || 'All';
+        document.getElementById('adminProdPrice').value = p.price;
+        document.getElementById('adminProdMRP').value = p.mrp;
+        document.getElementById('adminProdImage').value = p.image;
+        document.getElementById('adminProdBadge').value = p.badge || '';
+        document.getElementById('adminProdDesc').value = p.desc;
+        document.getElementById('adminProdInStock').checked = p.inStock;
+      } else {
+        title.textContent = 'Add New Gift Product';
+        form.reset();
+        document.getElementById('editProductId').value = '';
+        document.getElementById('adminProdImage').value = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
+        document.getElementById('adminProdInStock').checked = true;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAdminProductModal() {
+      document.getElementById('adminProductModal').classList.add('hidden');
+    }
+
+    function saveAdminProduct(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editProductId').value;
+      
+      const productData = {
+        title: document.getElementById('adminProdTitle').value.trim(),
+        category: document.getElementById('adminProdCategory').value,
+        occasion: document.getElementById('adminProdOccasion').value,
+        price: Number(document.getElementById('adminProdPrice').value),
+        mrp: Number(document.getElementById('adminProdMRP').value),
+        image: document.getElementById('adminProdImage').value.trim(),
+        badge: document.getElementById('adminProdBadge').value.trim(),
+        desc: document.getElementById('adminProdDesc').value.trim(),
+        inStock: document.getElementById('adminProdInStock').checked
+      };
+
+      if (editId) {
+        const index = state.products.findIndex(p => p.id === editId);
+        if (index !== -1) {
+          state.products[index] = { ...state.products[index], ...productData };
+        }
+      } else {
+        const newProduct = {
+          id: 'p_' + Date.now(),
+          ...productData
+        };
+        state.products.unshift(newProduct);
+      }
+
+      saveStateToStorage();
+      closeAdminProductModal();
+      updateAdminDashboard();
+      renderViewerProducts();
+      alert('Product saved successfully!');
+    }
+
+    function deleteProduct(productId) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        state.products = state.products.filter(p => p.id !== productId);
+        saveStateToStorage();
+        updateAdminDashboard();
+        renderViewerProducts();
+      }
+    }
+
+    function restoreDemoDefaults() {
+      if (confirm('Reset entire catalog to default customized gifts catalog? Custom added items will be replaced.')) {
+        state.products = [...DEFAULT_PRODUCTS];
+        state.settings = {...DEFAULT_SETTINGS};
+        saveStateToStorage();
+        applySettingsToUI();
+        updateAdminDashboard();
+        renderViewerProducts();
+        alert('Catalog reset to default Success Computech products.');
+      }
+    }
+
+    function exportDataBackup() {
+      const backupData = {
+        brand: state.settings.brandName,
+        exportDate: new Date().toISOString(),
+        products: state.products,
+        orders: state.orders,
+        settings: state.settings
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Success_Computech_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
