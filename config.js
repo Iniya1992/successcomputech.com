@@ -6,8 +6,8 @@
 
 const SUPABASE_CONFIG = {
   // Replace with your project details:
-  url: 'https://YOUR_PROJECT_REF.supabase.co',
-  anonKey: 'YOUR_SUPABASE_ANON_PUBLIC_KEY'
+ url: 'https://lucreiiulmgboxhegkea.supabase.co',
+  anonKey:'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e'
 };
 
 // Initialize Supabase Client
