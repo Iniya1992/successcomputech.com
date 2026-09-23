@@ -1362,7 +1362,7 @@ async function payWithRazorpay() {
 
     rzp.open();
 
-  } catch (error) {
+    } catch (error) {
     console.error(
       'Razorpay checkout error:',
       error
@@ -1374,5 +1374,6 @@ async function payWithRazorpay() {
     );
   }
 }
-    
-   
+
+// Initialize storefront
+window.addEventListener('DOMContentLoaded', initStorefront);
