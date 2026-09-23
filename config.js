@@ -1,21 +1,30 @@
-// =========================================================================
-// SUCCESS COMPUTECH - CONFIGURATION
-// =========================================================================
-
 const SUPABASE_CONFIG = {
-  url: 'https://lucreiiulmgboxhegkea.supabase.co',
-  anonKey: 'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e',
-  // Paste your Razorpay Key ID here from Razorpay Dashboard -> Settings -> API Keys
-  // Example: 'rzp_live_xxxxxxxxxxxx' or 'rzp_test_xxxxxxxxxxxx'
-  razorpayKeyId: 'rzp_live_TfW6dNkxxxgFBK
-' 
+  url: 'https://lucreiumgboxhegkea.supabase.co',
+  anonKey: 'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e'
 };
 
-// Initialize Supabase Client
+const SUPABASE_FUNCTION_URL =
+  'https://lucreiumgboxhegkea.supabase.co/functions/v1';
+
+const SUPABASE_PUBLISHABLE_KEY =
+  SUPABASE_CONFIG.anonKey;
+
+const RAZORPAY_KEY_ID =
+  'rzp_live_TfW6dNkxxxgFBK
+';
+
 let supabaseClient = null;
-if (typeof supabase !== 'undefined' && SUPABASE_CONFIG.url && !SUPABASE_CONFIG.url.includes('YOUR_PROJECT_REF')) {
-  supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+if (
+  typeof supabase !== 'undefined' &&
+  SUPABASE_CONFIG.url &&
+  SUPABASE_CONFIG.anonKey &&
+  !SUPABASE_CONFIG.anonKey.includes('YOUR_')
+) {
+  supabaseClient = supabase.createClient(
+    SUPABASE_CONFIG.url,
+    SUPABASE_CONFIG.anonKey
+  );
+
   console.log('Connected to Supabase successfully.');
-} else {
-  console.warn('Supabase client not initialized.');
 }
