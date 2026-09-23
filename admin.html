@@ -243,7 +243,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="font-bold text-gray-700 block mb-1">WhatsApp Business Number (with 91 country code)</label>
-                <input type="text" id="setWhatsapp" placeholder="919876543210" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+                <input type="text" id="setWhatsapp" placeholder="919944444834" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
                 <span class="text-[10px] text-gray-400">All customer WhatsApp orders redirect to this number.</span>
               </div>
               <div>
@@ -528,7 +528,7 @@
         const so = localStorage.getItem('sc_orders');
         adminState.orders = so ? JSON.parse(so) : [];
         const ss = localStorage.getItem('sc_settings');
-        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919876543210', address: 'Success Computech, Tiruppur' };
+        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919944444834', address: 'Success Computech, Tiruppur' };
       }
 
       updateKPIs();
