@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.store_settings (
     id INT PRIMARY KEY DEFAULT 1,
     brand_name TEXT DEFAULT 'Success Computech',
     brand_tagline TEXT DEFAULT 'Personalized Gifts • Photo Restoration • Tiruppur',
-    whatsapp TEXT DEFAULT '919876543210',
+    whatsapp TEXT DEFAULT '919944444834',
     upi_id TEXT DEFAULT 'successcomputech@upi',
     address TEXT DEFAULT 'Success Computech, Tiruppur, Tamil Nadu - 641604',
     announcement TEXT DEFAULT '🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.'
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.store_settings (
 
 -- Seed Initial Store Settings
 INSERT INTO public.store_settings (id, brand_name, brand_tagline, whatsapp, upi_id, address, announcement)
-VALUES (1, 'Success Computech', 'Personalized Gifts • Photo Restoration • Tiruppur', '919876543210', 'successcomputech@upi', 'Success Computech, Tiruppur, Tamil Nadu - 641604', '🎁 Order via WhatsApp for instant photo preview!')
+VALUES (1, 'Success Computech', 'Personalized Gifts • Photo Restoration • Tiruppur', '919944444834', 'successcomputech@upi', 'Success Computech, Tiruppur, Tamil Nadu - 641604', '🎁 Order via WhatsApp for instant photo preview!')
 ON CONFLICT (id) DO NOTHING;
 
 -- Seed Sample Initial Products
