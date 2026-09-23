@@ -9,10 +9,6 @@ const SUPABASE_FUNCTION_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   SUPABASE_CONFIG.anonKey;
 
-const RAZORPAY_KEY_ID =
-  'rzp_live_TfW6dNkxxxgFBK
-';
-
 let supabaseClient = null;
 
 if (
