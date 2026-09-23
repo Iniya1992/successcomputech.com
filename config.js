@@ -1,12 +1,14 @@
 // =========================================================================
-// SUCCESS COMPUTECH - CONFIGURATION (SUPABASE & RAZORPAY)
+// SUCCESS COMPUTECH - CONFIGURATION
 // =========================================================================
 
 const SUPABASE_CONFIG = {
   url: 'https://lucreiiulmgboxhegkea.supabase.co',
   anonKey: 'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e',
-  // Paste your Razorpay Key ID here from: Razorpay Dashboard -> Settings -> API Keys
-  razorpayKeyId: 'rzp_live_TfW6dNkxxxgFBK' 
+  // Paste your Razorpay Key ID here from Razorpay Dashboard -> Settings -> API Keys
+  // Example: 'rzp_live_xxxxxxxxxxxx' or 'rzp_test_xxxxxxxxxxxx'
+  razorpayKeyId: 'rzp_live_TfW6dNkxxxgFBK
+' 
 };
 
 // Initialize Supabase Client
@@ -15,5 +17,5 @@ if (typeof supabase !== 'undefined' && SUPABASE_CONFIG.url && !SUPABASE_CONFIG.u
   supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
   console.log('Connected to Supabase successfully.');
 } else {
-  console.warn('Supabase credentials not set or using fallback local demo mode.');
+  console.warn('Supabase client not initialized.');
 }

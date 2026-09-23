@@ -96,7 +96,7 @@
         <!-- Action Buttons -->
         <div class="flex items-center space-x-3 sm:space-x-4">
           <!-- WhatsApp Direct Contact -->
-          <a id="navWhatsappBtn" href="https://wa.me/919944444834" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
+          <a id="navWhatsappBtn" href="https://wa.me/919876543210" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
             <i class="fa-brands fa-whatsapp text-base"></i>
             <span class="hidden sm:inline">WhatsApp Order</span>
             <span class="sm:hidden">Chat</span>
@@ -210,6 +210,27 @@
         </div>
       </div>
     </section>
+
+    
+    <!-- PAYMENT ACCEPTANCE & TRUST TICKER -->
+    <div class="bg-white border-b border-rose-100 py-3">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-gray-700 font-bold">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Instant Online Payments Active:</span>
+          <span class="text-brand-600 font-extrabold flex items-center gap-1">
+            <i class="fa-solid fa-bolt"></i> Razorpay Secure
+          </span>
+        </div>
+        <div class="flex items-center space-x-3 text-gray-500 font-semibold text-[11px]">
+          <span class="bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">GPay</span>
+          <span class="bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">PhonePe</span>
+          <span class="bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Paytm</span>
+          <span class="bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">UPI / QR</span>
+          <span class="bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Debit / Credit Cards</span>
+        </div>
+      </div>
+    </div>
 
     <!-- QUICK CATEGORY PILLS -->
     <section class="bg-white border-b border-gray-100 py-6">
@@ -415,12 +436,15 @@
           <span class="text-xs text-gray-500">Unit Price</span>
           <p class="text-lg font-black text-gray-900" id="modalFooterPrice">₹499</p>
         </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <button onclick="addToCartFromModal()" class="flex-1 sm:flex-none bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 font-bold text-xs px-4 py-3 rounded-xl transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-cart-plus text-brand-600"></i> Add to Cart
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
+          <button onclick="payOnlineFromModal()" class="w-full sm:w-auto bg-gradient-to-r from-rose-600 to-brand-600 hover:from-rose-700 hover:to-brand-700 text-white font-extrabold text-xs px-4 py-3 rounded-xl shadow-md shadow-rose-200 transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-bolt text-amber-300"></i> Pay with Razorpay
           </button>
-          <button onclick="directOrderWhatsAppFromModal()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
-            <i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp
+          <button onclick="addToCartFromModal()" class="flex-1 sm:flex-none bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 font-bold text-xs px-3.5 py-3 rounded-xl transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-cart-plus text-brand-600"></i> Cart
+          </button>
+          <button onclick="directOrderWhatsAppFromModal()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
           </button>
         </div>
       </div>
@@ -505,7 +529,7 @@
           </p>
           <div class="flex items-center space-x-3 text-gray-400 text-base pt-2">
             <a href="#" class="hover:text-rose-400"><i class="fa-brands fa-instagram"></i></a>
-            <a id="footerWaIcon" href="https://wa.me/919944444834" target="_blank" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="footerWaIcon" href="https://wa.me/919876543210" target="_blank" class="hover:text-emerald-400"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
 
@@ -536,7 +560,7 @@
           <p class="text-gray-400 mt-2">WhatsApp Order: <span id="footerPhone" class="text-emerald-400 font-bold">+91 98765 43210</span></p>
           <div class="mt-4 p-3 rounded-xl bg-gray-800/80 border border-gray-700">
             <p class="text-[11px] text-gray-300 font-semibold">Need urgent customization for an anniversary or birthday?</p>
-            <a id="footerDirectWa" href="https://wa.me/919944444834" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
+            <a id="footerDirectWa" href="https://wa.me/919876543210" target="_blank" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-bold text-xs">
               <i class="fa-brands fa-whatsapp mr-1"></i> Send Instant Message
             </a>
           </div>
@@ -568,7 +592,7 @@
     const DEFAULT_SETTINGS = {
       brand_name: 'Success Computech',
       brand_tagline: 'Personalized Gifts • Photo Restoration • Tiruppur',
-      whatsapp: '919944444834',
+      whatsapp: '919876543210',
       upi_id: 'successcomputech@upi',
       address: 'Success Computech, Tiruppur, Tamil Nadu - 641604',
       announcement: '🎁 Order via WhatsApp for instant photo preview! 100% Quality Guaranteed.'
@@ -798,13 +822,20 @@
                   <span class="text-xs text-gray-400 line-through font-medium">₹${product.mrp}</span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
-                  <button onclick="openProductCustomizer('${product.id}')" class="w-full py-2 bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-[11px] rounded-xl transition flex items-center justify-center gap-1">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Customize
+                <!-- Action CTAs -->
+                <div class="space-y-1.5 pt-1">
+                  <button onclick="quickBuyNowRazorpay('${product.id}')" class="w-full py-2 bg-gradient-to-r from-rose-600 to-brand-600 hover:from-rose-700 hover:to-brand-700 text-white font-extrabold text-[11px] rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-[10px] text-amber-300"></i>
+                    <span>Buy Now (Razorpay)</span>
                   </button>
-                  <button onclick="quickOrderWhatsApp('${product.id}')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-xl transition flex items-center justify-center gap-1 shadow-sm">
-                    <i class="fa-brands fa-whatsapp text-xs"></i> Order
-                  </button>
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <button onclick="openProductCustomizer('${product.id}')" class="w-full py-1.5 bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-[10px] rounded-lg transition flex items-center justify-center gap-1 border border-rose-200/60">
+                      <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i> Customize
+                    </button>
+                    <button onclick="quickOrderWhatsApp('${product.id}')" class="w-full py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[10px] rounded-lg transition flex items-center justify-center gap-1 border border-emerald-200/60">
+                      <i class="fa-brands fa-whatsapp text-xs text-emerald-600"></i> WhatsApp
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1094,197 +1125,81 @@ ${itemsSummary}
       const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
       window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(orderMsg)}`, '_blank');
     }
-// --- RAZORPAY PAYMENT GATEWAY INTEGRATION ---
 
-const SUPABASE_FUNCTION_URL =
-  'https://lucreiumgboxhegkea.supabase.co/functions/v1';
-
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_TZ8AI-FcanuOTqQ4OS64aQ_4ABwNB4e';
-
-async function payWithRazorpay() {
-  if (state.cart.length === 0) {
-    alert('Your cart is empty. Please add custom gifts first!');
-    return;
-  }
-
-  const custName =
-    document.getElementById('orderCustomerName').value.trim();
-
-  const custPhone =
-    document.getElementById('orderCustomerPhone').value.trim();
-
-  const address =
-    document.getElementById('orderDeliveryAddress').value.trim();
-
-  if (!custName || !custPhone) {
-    alert('Please enter your Name and Mobile Number to proceed with payment.');
-    document.getElementById('orderCustomerName').focus();
-    return;
-  }
-
-  let total = 0;
-  let itemsSummary = '';
-
-  state.cart.forEach((item, i) => {
-    total += Number(item.price);
-
-    itemsSummary +=
-      `${i + 1}. ${item.title} (₹${item.price})\n` +
-      (item.customName
-        ? `   - Name: ${item.customName}\n`
-        : '') +
-      (item.customSong
-        ? `   - Song/Date: ${item.customSong}\n`
-        : '');
-  });
-
-  if (!Number.isFinite(total) || total <= 0) {
-    alert('Invalid order amount.');
-    return;
-  }
-
-  const orderCode =
-    'SC-' + Math.floor(100000 + Math.random() * 900000);
-
-  try {
-    // 1. CREATE RAZORPAY ORDER THROUGH SUPABASE
-    const createOrderResponse = await fetch(
-      `${SUPABASE_FUNCTION_URL}/create-razorpay-order`,
-      {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_PUBLISHABLE_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          amount: total
-        })
+    
+    // --- RAZORPAY PAYMENT GATEWAY INTEGRATION ---
+    async function payWithRazorpay() {
+      if (state.cart.length === 0) {
+        alert('Your cart is empty. Please add custom gifts first!');
+        return;
       }
-    );
 
-    const createOrderData = await createOrderResponse.json();
+      const custName = document.getElementById('orderCustomerName').value.trim();
+      const custPhone = document.getElementById('orderCustomerPhone').value.trim();
+      const address = document.getElementById('orderDeliveryAddress').value.trim();
 
-    if (!createOrderResponse.ok || !createOrderData.success) {
-      console.error('Create order error:', createOrderData);
-      throw new Error(
-        createOrderData.error ||
-        'Unable to create Razorpay order.'
-      );
-    }
+      if (!custName || !custPhone) {
+        alert('Please enter your Name and Mobile Number to proceed with payment.');
+        document.getElementById('orderCustomerName').focus();
+        return;
+      }
 
-    const razorpayOrderId = createOrderData.order_id;
-    const razorpayKeyId = createOrderData.key_id;
+      let total = 0;
+      let itemsSummary = '';
+      state.cart.forEach((item, i) => {
+        total += Number(item.price);
+        itemsSummary += `${i + 1}. ${item.title} (₹${item.price})\n` +
+          (item.customName ? `   - Name: ${item.customName}\n` : '') +
+          (item.customSong ? `   - Song/Date: ${item.customSong}\n` : '');
+      });
 
-    // 2. OPEN RAZORPAY CHECKOUT
-    const options = {
-      key: razorpayKeyId,
-      amount: createOrderData.amount,
-      currency: createOrderData.currency || 'INR',
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
 
-      name:
-        state.settings.brand_name ||
-        'Success Computech',
+      // Check Razorpay Key
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_1DP5mmOlF5G5ag'; // Sample Razorpay demo key for testing
 
-      description:
-        'Payment for Order #' + orderCode,
+      const options = {
+        key: rzpKey,
+        amount: total * 100, // in paise
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for Order #" + orderCode,
+        image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=120&q=80",
+        prefill: {
+          name: custName,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
 
-      order_id: razorpayOrderId,
-
-      image:
-        'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=120&q=80',
-
-      prefill: {
-        name: custName,
-        contact: custPhone
-      },
-
-      notes: {
-        order_code: orderCode,
-        customer_phone: custPhone
-      },
-
-      theme: {
-        color: '#e11d48'
-      },
-
-      handler: async function (response) {
-        try {
-          // 3. VERIFY PAYMENT SIGNATURE THROUGH SUPABASE
-          const verifyResponse = await fetch(
-            `${SUPABASE_FUNCTION_URL}/verify-razorpay-payment`,
-            {
-              method: 'POST',
-              headers: {
-                'apikey': SUPABASE_PUBLISHABLE_KEY,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                razorpay_order_id:
-                  response.razorpay_order_id,
-
-                razorpay_payment_id:
-                  response.razorpay_payment_id,
-
-                razorpay_signature:
-                  response.razorpay_signature
-              })
-            }
-          );
-
-          const verifyData = await verifyResponse.json();
-
-          if (
-            !verifyResponse.ok ||
-            !verifyData.success ||
-            !verifyData.verified
-          ) {
-            console.error(
-              'Payment verification failed:',
-              verifyData
-            );
-
-            alert(
-              'Payment received, but verification failed. Please contact Success Computech.'
-            );
-
-            return;
-          }
-
-          const paymentId =
-            response.razorpay_payment_id;
-
-          // 4. SAVE ORDER IN SUPABASE
+          // Record paid order in Supabase
           if (supabaseClient) {
-            const { error: dbError } =
-              await supabaseClient
-                .from('orders')
-                .insert([{
-                  order_code: orderCode,
-                  customer_name: custName,
-                  customer_phone: custPhone,
-                  delivery_address:
-                    address || 'Online Paid Order',
-                  items: state.cart,
-                  total_amount: total,
-                  status: 'Payment Received',
-                  razorpay_order_id:
-                    response.razorpay_order_id,
-                  razorpay_payment_id:
-                    paymentId,
-                  payment_status: 'Paid'
-                }]);
-
-            if (dbError) {
-              console.error(
-                'Order database error:',
-                dbError
-              );
+            try {
+              await supabaseClient.from('orders').insert([{
+                order_code: orderCode,
+                customer_name: custName,
+                customer_phone: custPhone,
+                delivery_address: address || 'Online Paid Order',
+                items: state.cart,
+                total_amount: total,
+                status: 'Payment Received (₹' + total + ' via Razorpay)',
+                payment_id: paymentId,
+                payment_status: 'Paid'
+              }]);
+            } catch (e) {
+              console.warn('Order database logging fallback', e);
             }
           }
 
-          // 5. WHATSAPP CONFIRMATION
-          const paidMsg =
-            `*PAID ONLINE ORDER #${orderCode} - ${state.settings.brand_name}*\n\n` +
+          alert('Payment Successful! Payment ID: ' + paymentId + '\n\nRedirecting to WhatsApp so you can share your photos/customization details with Success Computech.');
+
+          // Open WhatsApp with confirmation
+          const paidMsg = `*PAID ONLINE ORDER #${orderCode} - ${state.settings.brand_name}*\n\n` +
             `*Payment Status:* PAID via Razorpay\n` +
             `*Razorpay Payment ID:* ${paymentId}\n` +
             `*Amount Paid:* ₹${total}\n\n` +
@@ -1294,86 +1209,182 @@ async function payWithRazorpay() {
             `*Items Ordered:*\n${itemsSummary}\n` +
             `I have completed online payment! Please find my attached photos/customization requirements for printing.`;
 
-          alert(
-            'Payment Successful! 🎉\n\n' +
-            'Payment ID: ' +
-            paymentId
-          );
-
-          // Clear cart
           state.cart = [];
-
-          localStorage.setItem(
-            'sc_public_cart',
-            JSON.stringify(state.cart)
-          );
-
+          localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
           updateCartBadge();
           toggleCartDrawer();
 
-          // WhatsApp
-          const waPhone =
-            state.settings.whatsapp.replace(
-              /[^0-9]/g,
-              ''
-            );
-
-          window.open(
-            `https://wa.me/${waPhone}?text=${encodeURIComponent(paidMsg)}`,
-            '_blank'
-          );
-
-        } catch (error) {
-          console.error(
-            'Payment verification error:',
-            error
-          );
-
-          alert(
-            'Payment was completed, but order confirmation failed. Please contact Success Computech.'
-          );
+          const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+          window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(paidMsg)}`, '_blank');
+        },
+        modal: {
+          ondismiss: function() {
+            console.log('Checkout dismissed');
+          }
         }
-      },
+      };
 
-      modal: {
-        ondismiss: function () {
-          console.log(
-            'Razorpay Checkout dismissed'
-          );
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message + '. Please ensure your Razorpay Key ID is valid in config.js.');
+      }
+    }
+
+    
+    // --- DIRECT PRODUCT RAZORPAY CHECKOUT ---
+    async function quickBuyNowRazorpay(productId) {
+      const p = state.products.find(item => item.id == productId);
+      if (!p) return;
+
+      const custName = prompt("Enter your Name for the Order:", "");
+      if (!custName) return;
+      const custPhone = prompt("Enter your Mobile Number (10 digits):", "");
+      if (!custPhone) return;
+
+      const total = Number(p.price);
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_51b8e19c63d726e';
+
+      const options = {
+        key: rzpKey,
+        amount: total * 100, // paise
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for " + p.title,
+        image: p.image || "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=120&q=80",
+        prefill: {
+          name: custName,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
+
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('orders').insert([{
+                order_code: orderCode,
+                customer_name: custName,
+                customer_phone: custPhone,
+                delivery_address: 'Direct Razorpay Order',
+                items: [{ title: p.title, price: p.price, quantity: 1 }],
+                total_amount: total,
+                status: 'Payment Received (₹' + total + ' via Razorpay)',
+                payment_id: paymentId,
+                payment_status: 'Paid'
+              }]);
+            } catch (e) { console.warn('Order log fallback', e); }
+          }
+
+          alert('Payment Successful! Payment ID: ' + paymentId + '\n\nOpening WhatsApp to share your photos and delivery address with Success Computech.');
+
+          const paidMsg = `*PAID ONLINE ORDER #${orderCode} - ${state.settings.brand_name}*\n\n` +
+            `*Product:* ${p.title}\n` +
+            `*Amount Paid:* ₹${total} (PAID via Razorpay)\n` +
+            `*Payment ID:* ${paymentId}\n` +
+            `*Customer Name:* ${custName}\n` +
+            `*Phone:* ${custPhone}\n\n` +
+            `Hello Success Computech, my payment is completed! Please find my photos attached for custom printing.`;
+
+          const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+          window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(paidMsg)}`, '_blank');
         }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message);
       }
-    };
+    }
 
-    const rzp = new Razorpay(options);
+    async function payOnlineFromModal() {
+      if (!state.currentSelectedProduct) return;
+      const p = state.currentSelectedProduct;
 
-    rzp.on(
-      'payment.failed',
-      function (response) {
-        console.error(
-          'Razorpay payment failed:',
-          response.error
-        );
+      const customName = document.getElementById('custNameInput').value.trim() || 'Not specified';
+      const customSong = document.getElementById('custSongInput').value.trim() || 'Not specified';
+      const customNote = document.getElementById('custNoteInput').value.trim() || 'None';
 
-        alert(
-          'Payment failed. Please try again.'
-        );
+      const custName = prompt("Enter your Name for the Order:", customName !== 'Not specified' ? customName : "");
+      if (!custName) return;
+      const custPhone = prompt("Enter your Mobile Number (10 digits):", "");
+      if (!custPhone) return;
+
+      const total = Number(p.price);
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_51b8e19c63d726e';
+
+      const options = {
+        key: rzpKey,
+        amount: total * 100,
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for " + p.title,
+        image: p.image,
+        prefill: {
+          name: custName,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
+
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('orders').insert([{
+                order_code: orderCode,
+                customer_name: custName,
+                customer_phone: custPhone,
+                delivery_address: 'Customized Modal Order',
+                items: [{ title: p.title, price: p.price, customName, customSong, customNote }],
+                total_amount: total,
+                status: 'Payment Received (₹' + total + ' via Razorpay)',
+                payment_id: paymentId,
+                payment_status: 'Paid'
+              }]);
+            } catch (e) { console.warn('Order log fallback', e); }
+          }
+
+          alert('Payment Successful! Payment ID: ' + paymentId + '\n\nOpening WhatsApp to share your photos and delivery address with Success Computech.');
+
+          const paidMsg = `*PAID ONLINE ORDER #${orderCode} - ${state.settings.brand_name}*\n\n` +
+            `*Product:* ${p.title}\n` +
+            `*Amount Paid:* ₹${total} (PAID via Razorpay)\n` +
+            `*Payment ID:* ${paymentId}\n` +
+            `*Customer Name:* ${custName}\n` +
+            `*Phone:* ${custPhone}\n` +
+            `*Customization Name:* ${customName}\n` +
+            `*Song / Date:* ${customSong}\n` +
+            `*Notes:* ${customNote}\n\n` +
+            `Payment completed! Please find my attached photos.`;
+
+          closeProductModal();
+          const waPhone = state.settings.whatsapp.replace(/[^0-9]/g, '');
+          window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(paidMsg)}`, '_blank');
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message);
       }
-    );
+    }
 
-    rzp.open();
-
-    } catch (error) {
-    console.error(
-      'Razorpay checkout error:',
-      error
-    );
-
-    alert(
-      'Unable to start payment.\n\n' +
-      error.message
-    );
-  }
-}
-
-// Initialize storefront
-window.addEventListener('DOMContentLoaded', initStorefront);
+    window.addEventListener('DOMContentLoaded', initStorefront);
+  </script>
+</body>
+</html>

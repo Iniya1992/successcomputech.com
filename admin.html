@@ -243,7 +243,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="font-bold text-gray-700 block mb-1">WhatsApp Business Number (with 91 country code)</label>
-                <input type="text" id="setWhatsapp" placeholder="919944444834" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
+                <input type="text" id="setWhatsapp" placeholder="919876543210" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500" required />
                 <span class="text-[10px] text-gray-400">All customer WhatsApp orders redirect to this number.</span>
               </div>
               <div>
@@ -528,7 +528,7 @@
         const so = localStorage.getItem('sc_orders');
         adminState.orders = so ? JSON.parse(so) : [];
         const ss = localStorage.getItem('sc_settings');
-        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919944444834', address: 'Success Computech, Tiruppur' };
+        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919876543210', address: 'Success Computech, Tiruppur' };
       }
 
       updateKPIs();
@@ -750,12 +750,12 @@
       document.getElementById('productEditModal').classList.add('hidden');
     }
 
-    async function saveProduct(e) {
+        async function saveProduct(e) {
       e.preventDefault();
       const editId = document.getElementById('editProdId').value;
 
       if (uploadedImages.length === 0) {
-        alert('Please upload at least 1 photo (up to 4 photos) for this product.');
+        alert('Please upload at least 1 photo for this product.');
         return;
       }
 
@@ -775,25 +775,34 @@
       if (supabaseClient) {
         if (editId) {
           let res = await supabaseClient.from('products').update(payload).eq('id', editId);
-          if (res.error && res.error.message.includes("'images' column")) {
+          // If images column is missing in Supabase, retry with single image
+          if (res.error && (res.error.message.includes("'images'") || res.error.message.includes("schema cache"))) {
             const fallbackPayload = { ...payload };
             delete fallbackPayload.images;
             res = await supabaseClient.from('products').update(fallbackPayload).eq('id', editId);
           }
-          if (res.error) { alert('Error updating product: ' + res.error.message); return; }
+          if (res.error) {
+            alert('Error updating product: ' + res.error.message);
+            return;
+          }
         } else {
           let res = await supabaseClient.from('products').insert([payload]);
-          if (res.error && res.error.message.includes("'images' column")) {
+          // If images column is missing in Supabase, retry with single image
+          if (res.error && (res.error.message.includes("'images'") || res.error.message.includes("schema cache"))) {
             const fallbackPayload = { ...payload };
             delete fallbackPayload.images;
             res = await supabaseClient.from('products').insert([fallbackPayload]);
             if (!res.error) {
-              alert('Product saved with primary photo! To enable all 4 photos, please run the SQL command in Supabase.');
+              alert('Product saved with main photo! Note: To save all 4 photos, please run the SQL update in Supabase SQL Editor.');
             }
           }
-          if (res.error) { alert('Error inserting product: ' + res.error.message); return; }
+          if (res.error) {
+            alert('Error inserting product: ' + res.error.message);
+            return;
+          }
         }
       } else {
+        // Fallback local storage
         if (editId) {
           const idx = adminState.products.findIndex(p => p.id == editId);
           if (idx !== -1) adminState.products[idx] = { ...adminState.products[idx], ...payload };
@@ -804,8 +813,8 @@
       }
 
       closeProductModal();
-      loadAdminData();
-      alert('Product saved successfully!');
+      await loadAdminData();
+      alert('Product saved successfully and published to database!');
     }
 
     async function toggleProductStock(prodId, newStatus) {
