@@ -620,43 +620,53 @@
       { name: 'Lighting', icon: 'fa-lightbulb' }
     ];
 
-    async function initStorefront() {
+        async function initStorefront() {
       // 1. Fetch Store Settings
       if (supabaseClient) {
         try {
           const { data: setts } = await supabaseClient.from('store_settings').select('*').single();
           if (setts) state.settings = setts;
-        } catch (e) { console.warn('Could not fetch Supabase settings, using default', e); }
+        } catch (e) { console.warn('Supabase settings fallback', e); }
       }
 
       applySettingsToUI();
 
-      // 2. Fetch Products
+      // 2. Fetch Products with complete fail-safe resilience
+      let productsLoaded = false;
       if (supabaseClient) {
         try {
           const { data: prods, error } = await supabaseClient
             .from('products')
             .select('*')
-            .eq('in_stock', true)
             .order('created_at', { ascending: false });
+
           if (!error && prods && prods.length > 0) {
             state.products = prods;
-          } else {
-            state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+            productsLoaded = true;
           }
         } catch (e) {
-          console.warn('Using fallback products', e);
-          state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+          console.warn('Supabase product query error, falling back', e);
         }
-      } else {
-        const localProds = localStorage.getItem('sc_products');
-        state.products = localProds ? JSON.parse(localProds) : [...DEFAULT_FALLBACK_PRODUCTS];
-        const localSetts = localStorage.getItem('sc_settings');
-        if (localSetts) state.settings = JSON.parse(localSetts);
-        applySettingsToUI();
       }
 
-      // Load cart from session/local storage
+      // If Supabase has 0 products or query fails, check localStorage or seed catalog
+      if (!productsLoaded) {
+        const localProds = localStorage.getItem('sc_products');
+        if (localProds) {
+          const parsed = JSON.parse(localProds);
+          if (parsed && parsed.length > 0) {
+            state.products = parsed;
+            productsLoaded = true;
+          }
+        }
+      }
+
+      // Ultimate guarantee: seed default catalog if still empty
+      if (!productsLoaded || !state.products || state.products.length === 0) {
+        state.products = [...DEFAULT_FALLBACK_PRODUCTS];
+      }
+
+      // Load cart
       const savedCart = localStorage.getItem('sc_public_cart');
       if (savedCart) state.cart = JSON.parse(savedCart);
 
@@ -757,7 +767,7 @@
       const grid = document.getElementById('productGrid');
       const empty = document.getElementById('emptyState');
 
-      let filtered = state.products.filter(p => p.in_stock);
+      let filtered = state.products.filter(p => p.in_stock !== false);
 
       if (state.activeCategory !== 'All') {
         filtered = filtered.filter(p => p.category === state.activeCategory);
