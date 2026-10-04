@@ -420,7 +420,7 @@
         });
       } else {
         // Check local demo session
-        const demoAuth = sessionStorage.getItem('sc_master_session') || sessionStorage.getItem('sc_demo_auth');
+        const demoAuth = sessionStorage.getItem('sc_demo_auth');
         if (demoAuth) {
           adminState.user = { email: demoAuth };
           showDashboard();
@@ -444,40 +444,25 @@
       loadAdminData();
     }
 
-        async function handleAdminLogin(e) {
+    async function handleAdminLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
       errBox.classList.add('hidden');
 
-      // Master Access PIN bypass: allows owner to enter immediately with PIN 1234 or master password
-      if (password === '1234' || password === 'admin123' || password === 'success123') {
-        sessionStorage.setItem('sc_master_session', email);
-        adminState.user = { email: email || 'admin@successcomputech.com' };
-        showDashboard();
-        return;
-      }
-
       if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-          if (error) {
-            // If Supabase auth fails, offer helpful message or accept if owner
-            errBox.innerHTML = `<span>${error.message}</span><br><span class="text-[10px] text-gray-500 mt-1 block">Tip: You can also use Master PIN <b>1234</b> to log in directly.</span>`;
-            errBox.classList.remove('hidden');
-          } else {
-            adminState.user = data.user;
-            showDashboard();
-          }
-        } catch (err) {
-          // Fallback login
-          sessionStorage.setItem('sc_master_session', email);
-          adminState.user = { email };
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          errBox.textContent = error.message;
+          errBox.classList.remove('hidden');
+        } else {
+          adminState.user = data.user;
           showDashboard();
         }
       } else {
-        sessionStorage.setItem('sc_master_session', email);
+        // Fallback demo login
+        sessionStorage.setItem('sc_demo_auth', email);
         adminState.user = { email };
         showDashboard();
       }
@@ -487,7 +472,7 @@
       if (supabaseClient) {
         await supabaseClient.auth.signOut();
       }
-      sessionStorage.removeItem('sc_master_session'); sessionStorage.removeItem('sc_demo_auth');
+      sessionStorage.removeItem('sc_demo_auth');
       adminState.user = null;
       showAuth();
     }
@@ -511,15 +496,11 @@
     }
 
     // Load Data
-        async function loadAdminData() {
-      let loaded = false;
+    async function loadAdminData() {
       if (supabaseClient) {
         try {
-          const { data: prods, error: pErr } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
-          if (!pErr && prods && prods.length > 0) {
-            adminState.products = prods;
-            loaded = true;
-          }
+          const { data: prods } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+          if (prods) adminState.products = prods;
 
           const { data: ords } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
           if (ords) adminState.orders = ords;
@@ -529,13 +510,13 @@
         } catch (err) {
           console.warn('Error fetching Supabase admin data', err);
         }
-      }
-
-      if (!loaded) {
+      } else {
+        // Load from local storage demo
         const sp = localStorage.getItem('sc_products');
         if (sp) {
           adminState.products = JSON.parse(sp);
         } else {
+          // Initialize with default products
           adminState.products = [
             { id: 'p1', title: 'Spotify Acrylic LED Frame with Custom Scannable Song', category: 'Acrylic', occasion: 'Love', price: 599, mrp: 899, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80', description: 'Premium crystal-clear 4mm acrylic with wooden LED base.', in_stock: true },
             { id: 'p2', title: 'Customized Wooden Moon Lamp Frame', category: 'Lighting', occasion: 'Anniversary', price: 490, mrp: 799, badge: 'Trending', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80', description: 'Romantic lunar lamp texture with customized photo.', in_stock: true },
@@ -544,6 +525,10 @@
           ];
           localStorage.setItem('sc_products', JSON.stringify(adminState.products));
         }
+        const so = localStorage.getItem('sc_orders');
+        adminState.orders = so ? JSON.parse(so) : [];
+        const ss = localStorage.getItem('sc_settings');
+        adminState.settings = ss ? JSON.parse(ss) : { brand_name: 'Success Computech', whatsapp: '919944444834', address: 'Success Computech, Tiruppur' };
       }
 
       updateKPIs();
@@ -855,40 +840,63 @@
     }
 
     // Orders Management
-    function renderOrderTable() {
+        function renderOrderTable() {
       const tbody = document.getElementById('adminOrderTable');
-      if (adminState.orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400">No customer orders recorded yet. Incoming orders from customer cart/WhatsApp flow will appear here.</td></tr>`;
+      if (!adminState.orders || adminState.orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-400">
+          <i class="fa-solid fa-clipboard-list text-3xl mb-2 text-gray-300"></i>
+          <p class="font-bold text-xs">No customer orders recorded yet.</p>
+          <p class="text-[10px] text-gray-400">Incoming orders placed on successcomputech.in will appear here automatically.</p>
+        </td></tr>`;
         return;
       }
 
       tbody.innerHTML = adminState.orders.map(o => {
-        const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : (o.date || 'Recent');
+        const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : (o.date || 'Recent');
         const items = Array.isArray(o.items) ? o.items : [];
+        const custPhone = o.customer_phone || o.phone || '';
+        const cleanPhone = custPhone.replace(/[^0-9]/g, '');
+        const isPaid = (o.payment_status === 'Paid' || (o.status && o.status.includes('Payment Received')));
+
         return `
-          <tr class="hover:bg-gray-50/70 transition">
-            <td class="py-3 px-4">
-              <p class="font-bold text-gray-900">${o.order_code || o.orderId || 'Order'}</p>
-              <p class="text-[10px] text-gray-400">${orderDate}</p>
+          <tr class="hover:bg-gray-50/80 transition">
+            <td class="py-3.5 px-4">
+              <span class="font-extrabold text-brand-700 bg-rose-50 px-2 py-0.5 rounded text-xs border border-rose-200">
+                #${o.order_code || o.orderId || 'Order'}
+              </span>
+              <p class="text-[10px] text-gray-400 mt-1">${orderDate}</p>
             </td>
-            <td class="py-3 px-4">
-              <p class="font-bold text-gray-800">${o.customer_name || o.customerName || 'Customer'}</p>
-              <p class="text-[10px] text-gray-500">${o.customer_phone || o.phone || '-'}</p>
-              <p class="text-[10px] text-gray-400 truncate max-w-xs">${o.delivery_address || o.address || '-'}</p>
+            <td class="py-3.5 px-4">
+              <p class="font-bold text-gray-900">${o.customer_name || o.customerName || 'Customer'}</p>
+              <p class="font-extrabold text-emerald-600 text-[11px] flex items-center gap-1 mt-0.5">
+                <i class="fa-solid fa-phone text-[9px]"></i> +91 ${custPhone}
+              </p>
+              <p class="text-[10px] text-gray-500 truncate max-w-xs mt-0.5">${o.delivery_address || o.address || 'Address not given'}</p>
             </td>
-            <td class="py-3 px-4">
-              <div class="space-y-1">
+            <td class="py-3.5 px-4">
+              <div class="space-y-1 max-w-sm">
                 ${items.map(it => `
-                  <div class="text-[11px]">
-                    <span class="font-semibold text-gray-800">• ${it.title}</span>
-                    ${it.customName ? `<span class="text-gray-500"> [Name: ${it.customName}]</span>` : ''}
+                  <div class="text-[11px] bg-gray-50 p-1.5 rounded-lg border border-gray-100">
+                    <div class="flex justify-between font-semibold text-gray-800">
+                      <span>• ${it.title}</span>
+                      <span class="text-brand-600 ml-2">₹${it.price}</span>
+                    </div>
+                    ${it.customName ? `<p class="text-[10px] text-gray-500">Name: <span class="font-bold text-gray-700">${it.customName}</span></p>` : ''}
+                    ${it.customSong ? `<p class="text-[10px] text-gray-500">Song/Date: <span class="font-bold text-gray-700">${it.customSong}</span></p>` : ''}
+                    ${it.customNote ? `<p class="text-[10px] text-gray-500">Note: ${it.customNote}</p>` : ''}
                   </div>
                 `).join('')}
               </div>
             </td>
-            <td class="py-3 px-4 font-black text-brand-600">₹${o.total_amount || o.total || 0}</td>
-            <td class="py-3 px-4">
-              <select onchange="updateOrderStatus('${o.id || o.orderId}', this.value)" class="bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 font-bold focus:ring-1 focus:ring-brand-500">
+            <td class="py-3.5 px-4">
+              <p class="font-black text-gray-900 text-sm">₹${o.total_amount || o.total || 0}</p>
+              <span class="inline-block mt-1 px-2 py-0.5 rounded text-[9px] font-extrabold ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${isPaid ? '✓ Paid Online' : 'COD / WhatsApp'}
+              </span>
+              ${o.payment_id ? `<p class="text-[9px] text-gray-400 mt-0.5 truncate max-w-[100px]" title="${o.payment_id}">ID: ${o.payment_id}</p>` : ''}
+            </td>
+            <td class="py-3.5 px-4">
+              <select onchange="updateOrderStatus('${o.id || o.orderId || o.order_code}', this.value)" class="bg-white border border-gray-300 text-xs rounded-xl p-2 font-bold focus:ring-2 focus:ring-brand-500 shadow-sm">
                 <option value="Order Placed" ${o.status === 'Order Placed' ? 'selected' : ''}>⏳ Order Placed</option>
                 <option value="Photo Received" ${o.status === 'Photo Received' ? 'selected' : ''}>📷 Photo Received</option>
                 <option value="In Production" ${o.status === 'In Production' ? 'selected' : ''}>🖨️ In Production</option>
@@ -896,12 +904,15 @@
                 <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
               </select>
             </td>
-            <td class="py-3 px-4 text-right">
-              ${(o.customer_phone || o.phone) ? `
-                <a href="https://wa.me/${(o.customer_phone || o.phone).replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(o.customer_name || '')},%20regarding%20your%20custom%20gift%20order%20at%20Success%20Computech..." target="_blank" class="text-emerald-600 hover:text-emerald-700 font-bold p-1">
-                  <i class="fa-brands fa-whatsapp text-base"></i>
+            <td class="py-3.5 px-4 text-right space-x-1">
+              ${cleanPhone ? `
+                <a href="https://wa.me/91${cleanPhone}?text=Hello%20${encodeURIComponent(o.customer_name || 'Customer')},%20regarding%20your%20order%20${o.order_code}%20at%20Success%20Computech..." target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition" title="Message Customer on WhatsApp">
+                  <i class="fa-brands fa-whatsapp text-sm"></i>
                 </a>
-              ` : '—'}
+                <a href="tel:+91${cleanPhone}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 transition" title="Call Customer">
+                  <i class="fa-solid fa-phone text-xs"></i>
+                </a>
+              ` : '<span class="text-gray-400">—</span>'}
             </td>
           </tr>
         `;
@@ -957,7 +968,11 @@
       alert('Store settings saved successfully!');
     }
 
-    window.addEventListener('DOMContentLoaded', initAdminApp);
+    window.addEventListener('DOMContentLoaded', () => {
+      initAdminApp();
+      // Auto-poll for new orders every 12 seconds
+      setInterval(loadAdminData, 12000);
+    });
   </script>
 </body>
 </html>
