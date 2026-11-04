@@ -12,6 +12,8 @@
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
+  <!-- EmailJS Browser SDK for Automated Email Receipts -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Razorpay Checkout Integration -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
@@ -115,7 +117,8 @@
               <div id="custDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 text-xs animate-fade-in">
                 <div class="px-4 py-2 border-b border-gray-100">
                   <p class="text-[10px] text-gray-400 font-semibold">Logged in as:</p>
-                  <p class="font-extrabold text-gray-900 truncate" id="custProfilePhoneDisplay">9944444834</p>
+                  <p class="font-extrabold text-gray-900 truncate text-xs" id="custProfileEmailDisplay">user@gmail.com</p>
+                  <p class="text-[10px] text-emerald-600 font-bold" id="custProfilePhoneDisplay">+91 99444 44834</p>
                 </div>
                 <button onclick="openMyOrdersModal()" class="w-full text-left px-4 py-2.5 hover:bg-rose-50 text-gray-700 hover:text-brand-600 font-bold flex items-center gap-2">
                   <i class="fa-solid fa-box-open text-brand-600"></i> My Orders
@@ -1417,10 +1420,10 @@ ${itemsSummary}
 
     
     // =========================================================================
-    // CUSTOMER MOBILE AUTHENTICATION & SESSION MANAGEMENT
+    // // =========================================================================
+    // CUSTOMER EMAIL AUTHENTICATION & SESSION MANAGEMENT (NO OTP REQUIRED)
     // =========================================================================
     let currentCustomer = null;
-    let pendingOtp = null;
 
     function initCustomerSession() {
       const saved = localStorage.getItem('sc_customer_user');
@@ -1438,19 +1441,23 @@ ${itemsSummary}
       const loginBtn = document.getElementById('custLoginBtn');
       const profileMenu = document.getElementById('custProfileMenu');
       const nameDisplay = document.getElementById('custProfileNameDisplay');
+      const emailDisplay = document.getElementById('custProfileEmailDisplay');
       const phoneDisplay = document.getElementById('custProfilePhoneDisplay');
 
-      if (currentCustomer && currentCustomer.phone) {
+      if (currentCustomer && currentCustomer.email) {
         loginBtn.classList.add('hidden');
         profileMenu.classList.remove('hidden');
-        nameDisplay.textContent = currentCustomer.name || 'Account';
-        phoneDisplay.textContent = '+91 ' + currentCustomer.phone;
+        nameDisplay.textContent = currentCustomer.name || currentCustomer.email.split('@')[0];
+        if (emailDisplay) emailDisplay.textContent = currentCustomer.email;
+        if (phoneDisplay && currentCustomer.phone) phoneDisplay.textContent = '+91 ' + currentCustomer.phone;
         
         // Auto-fill checkout fields if on screen
         const addrField = document.getElementById('orderDeliveryAddress');
         const nameField = document.getElementById('orderCustomerName');
+        const emailField = document.getElementById('orderCustomerEmail');
         const phoneField = document.getElementById('orderCustomerPhone');
         if (nameField && currentCustomer.name) nameField.value = currentCustomer.name;
+        if (emailField && currentCustomer.email) emailField.value = currentCustomer.email;
         if (phoneField && currentCustomer.phone) phoneField.value = currentCustomer.phone;
         if (addrField && currentCustomer.address) addrField.value = currentCustomer.address;
       } else {
@@ -1461,7 +1468,7 @@ ${itemsSummary}
 
     function toggleCustomerMenu() {
       const dd = document.getElementById('custDropdown');
-      dd.classList.toggle('hidden');
+      if (dd) dd.classList.toggle('hidden');
     }
 
     // Close customer dropdown on outside click
@@ -1477,14 +1484,12 @@ ${itemsSummary}
       window._loginCallback = callback;
       const modal = document.getElementById('customerLoginModal');
       modal.classList.remove('hidden');
-      document.getElementById('otpInputSection').classList.add('hidden');
-      document.getElementById('custLoginSubmitBtn').textContent = 'Continue with Mobile';
-      pendingOtp = null;
 
       if (currentCustomer) {
-        document.getElementById('custLoginName').value = currentCustomer.name || '';
-        document.getElementById('custLoginPhone').value = currentCustomer.phone || '';
-        document.getElementById('custLoginAddress').value = currentCustomer.address || '';
+        if (document.getElementById('custLoginName')) document.getElementById('custLoginName').value = currentCustomer.name || '';
+        if (document.getElementById('custLoginEmail')) document.getElementById('custLoginEmail').value = currentCustomer.email || '';
+        if (document.getElementById('custLoginPhone')) document.getElementById('custLoginPhone').value = currentCustomer.phone || '';
+        if (document.getElementById('custLoginAddress')) document.getElementById('custLoginAddress').value = currentCustomer.address || '';
       }
     }
 
@@ -1492,39 +1497,28 @@ ${itemsSummary}
       document.getElementById('customerLoginModal').classList.add('hidden');
     }
 
+    // DIRECT EMAIL LOGIN (NO OTP REQUIRED)
     function handleCustomerLoginSubmit(e) {
       e.preventDefault();
       const name = document.getElementById('custLoginName').value.trim();
+      const email = document.getElementById('custLoginEmail').value.trim().toLowerCase();
       const phone = document.getElementById('custLoginPhone').value.trim().replace(/[^0-9]/g, '');
-      const address = document.getElementById('custLoginAddress').value.trim();
+      const address = document.getElementById('custLoginAddress') ? document.getElementById('custLoginAddress').value.trim() : '';
 
-      if (phone.length !== 10) {
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      if (phone && phone.length !== 10) {
         alert('Please enter a valid 10-digit mobile number.');
         return;
       }
 
-      const otpSection = document.getElementById('otpInputSection');
-      const submitBtn = document.getElementById('custLoginSubmitBtn');
-
-      // Step 1: Prompt OTP
-      if (otpSection.classList.contains('hidden')) {
-        pendingOtp = '1234'; // Fast instant verification OTP
-        otpSection.classList.remove('hidden');
-        submitBtn.textContent = 'Verify OTP & Log In';
-        document.getElementById('custOtpInput').focus();
-        return;
-      }
-
-      // Step 2: Validate OTP
-      const userOtp = document.getElementById('custOtpInput').value.trim();
-      if (!userOtp || (userOtp !== '1234' && userOtp.length !== 4)) {
-        alert('Please enter the 4-digit verification OTP (Use: 1234).');
-        return;
-      }
-
-      // Verified! Save session
+      // Save customer session immediately without OTP
       currentCustomer = {
         name: name,
+        email: email,
         phone: phone,
         address: address,
         loggedInAt: new Date().toISOString()
@@ -1533,11 +1527,12 @@ ${itemsSummary}
       localStorage.setItem('sc_customer_user', JSON.stringify(currentCustomer));
       renderCustomerHeaderWidget();
       closeCustomerLoginModal();
-      alert('Welcome ' + name + '! You are now signed in with ' + phone + '.');
+      alert('Welcome ' + name + '! You are now signed in with ' + email + '.');
 
       if (window._loginCallback) {
-        window._loginCallback();
+        const cb = window._loginCallback;
         window._loginCallback = null;
+        cb();
       }
     }
 
@@ -1546,17 +1541,19 @@ ${itemsSummary}
         localStorage.removeItem('sc_customer_user');
         currentCustomer = null;
         renderCustomerHeaderWidget();
-        document.getElementById('custDropdown').classList.add('hidden');
+        const dd = document.getElementById('custDropdown');
+        if (dd) dd.classList.add('hidden');
         alert('You have been signed out.');
       }
     }
 
     // =========================================================================
-    // MY ORDERS MODAL (TRACK BY CUSTOMER MOBILE)
+    // MY ORDERS MODAL (TRACK BY CUSTOMER EMAIL & PHONE)
     // =========================================================================
     async function openMyOrdersModal() {
-      document.getElementById('custDropdown').classList.add('hidden');
-      if (!currentCustomer) {
+      const dd = document.getElementById('custDropdown');
+      if (dd) dd.classList.add('hidden');
+      if (!currentCustomer || !currentCustomer.email) {
         openCustomerLoginModal(openMyOrdersModal);
         return;
       }
@@ -1564,7 +1561,7 @@ ${itemsSummary}
       const modal = document.getElementById('myOrdersModal');
       const listEl = document.getElementById('myOrdersList');
       const subtitle = document.getElementById('myOrdersSubtitle');
-      subtitle.textContent = `Showing orders for +91 ${currentCustomer.phone}`;
+      subtitle.textContent = `Showing orders for ${currentCustomer.email} (+91 ${currentCustomer.phone})`;
       modal.classList.remove('hidden');
 
       listEl.innerHTML = `
@@ -1577,12 +1574,23 @@ ${itemsSummary}
       let orders = [];
       if (supabaseClient) {
         try {
-          const { data, error } = await supabaseClient
+          // Query by email first, fallback to phone
+          const { data: byEmail, error: err1 } = await supabaseClient
             .from('orders')
             .select('*')
-            .eq('customer_phone', currentCustomer.phone)
+            .eq('customer_email', currentCustomer.email)
             .order('created_at', { ascending: false });
-          if (!error && data) orders = data;
+
+          if (!err1 && byEmail && byEmail.length > 0) {
+            orders = byEmail;
+          } else if (currentCustomer.phone) {
+            const { data: byPhone, error: err2 } = await supabaseClient
+              .from('orders')
+              .select('*')
+              .eq('customer_phone', currentCustomer.phone)
+              .order('created_at', { ascending: false });
+            if (!err2 && byPhone) orders = byPhone;
+          }
         } catch (e) {
           console.warn('Could not query Supabase orders for customer', e);
         }
@@ -1594,7 +1602,7 @@ ${itemsSummary}
             <div class="w-14 h-14 bg-rose-50 text-brand-600 rounded-full flex items-center justify-center mx-auto text-2xl">
               <i class="fa-solid fa-box-open"></i>
             </div>
-            <p class="text-xs font-bold text-gray-800">No orders found for this mobile number yet.</p>
+            <p class="text-xs font-bold text-gray-800">No orders found for ${currentCustomer.email}.</p>
             <p class="text-[11px] text-gray-500">Pick any personalized gift and place an order to see it tracked here!</p>
             <button onclick="closeMyOrdersModal(); scrollToProducts();" class="text-xs font-bold text-brand-600 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-xl">
               Browse Gifts
@@ -1655,172 +1663,412 @@ ${itemsSummary}
     }
 
     // =========================================================================
-    // DUAL NOTIFICATION & RECEIPT LOGIC (CUSTOMER & ADMIN)
+    // AUTOMATED EMAIL CONFIRMATION & ORDER RECEIPT NOTIFICATIONS
     // =========================================================================
+    async function sendCustomerConfirmationEmail(orderData) {
+      const itemsList = orderData.items.map((it, idx) => `${idx + 1}. ${it.title} - ₹${it.price}`).join('\n');
+
+      // 1. Dispatch via EmailJS (if configured with API key)
+      if (typeof emailjs !== 'undefined' && typeof EMAIL_CONFIG !== 'undefined' && EMAIL_CONFIG.publicKey && !EMAIL_CONFIG.publicKey.includes('YOUR_EMAILJS')) {
+        try {
+          await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
+            to_name: orderData.customer_name,
+            to_email: orderData.customer_email,
+            order_code: orderData.order_code,
+            order_items: itemsList,
+            total_amount: orderData.total_amount,
+            delivery_address: orderData.delivery_address,
+            payment_status: orderData.payment_status || 'Pending',
+            whatsapp_support: '+91 99444 44834',
+            store_name: state.settings.brand_name || 'Success Computech'
+          });
+          console.log('Automated order confirmation email sent to', orderData.customer_email);
+        } catch (err) {
+          console.warn('EmailJS dispatch notice:', err);
+        }
+      }
+    }
+
     async function triggerDualOrderConfirmation(orderData) {
-      // 1. Display Order Confirmation Receipt Modal on screen
+      // 1. Populate Confirmation Receipt Modal
       document.getElementById('confOrderCode').textContent = orderData.order_code;
       document.getElementById('confCustName').textContent = orderData.customer_name;
+      document.getElementById('confCustEmail').textContent = orderData.customer_email;
       document.getElementById('confCustPhone').textContent = '+91 ' + orderData.customer_phone;
       document.getElementById('confTotalAmount').textContent = '₹' + orderData.total_amount;
 
-      // Customer receipt WhatsApp text
-      const receiptText = `*Order Confirmation - Success Computech, Tiruppur*\n\n` +
-        `Dear ${orderData.customer_name},\n` +
-        `Your order #${orderData.order_code} for ₹${orderData.total_amount} has been successfully received!\n\n` +
+      // 2. Dispatch automated confirmation email
+      await sendCustomerConfirmationEmail(orderData);
+
+      // 3. Prepare Open in Mail client link
+      const emailSubject = `Order Confirmation #${orderData.order_code} - ${state.settings.brand_name || 'Success Computech'}`;
+      const emailBody = `Dear ${orderData.customer_name},\n\nThank you for your order with Success Computech!\n\nOrder ID: #${orderData.order_code}\nTotal Amount: ₹${orderData.total_amount}\nDelivery Address: ${orderData.delivery_address}\n\nItems Ordered:\n` +
+        orderData.items.map((it, i) => `${i + 1}. ${it.title} (₹${it.price})`).join('\n') +
+        `\n\nPlease reply to our WhatsApp (+91 99444 44834) with your customized photos/dates for preview!\n\nWarm regards,\nSuccess Computech, Tiruppur\nContact: +91 99444 44834`;
+
+      const mailtoUrl = `mailto:${encodeURIComponent(orderData.customer_email)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      const emailBtn = document.getElementById('confOpenEmailBtn');
+      if (emailBtn) emailBtn.href = mailtoUrl;
+
+      // Customer link to send photos/receipt to Success Computech WhatsApp
+      const receiptWaText = `*Order Confirmation #${orderData.order_code} - ${state.settings.brand_name || 'Success Computech'}*\n\n` +
+        `Customer: ${orderData.customer_name}\n` +
+        `Email: ${orderData.customer_email}\n` +
+        `Phone: +91 ${orderData.customer_phone}\n` +
+        `Amount: ₹${orderData.total_amount}\n\n` +
         `*Items Ordered:*\n` +
         orderData.items.map((it, i) => `${i+1}. ${it.title} (₹${it.price})`).join('\n') +
-        `\n\n*Delivery Address:* ${orderData.delivery_address}\n\n` +
-        `*Please reply to this chat with your photos/design text for instant proofing.*\n` +
-        `Studio: Success Computech, Tiruppur | Call/WhatsApp: +91 99444 44834`;
+        `\n\nAddress: ${orderData.delivery_address}\n\nHello Success Computech, please find my photos attached for customization!`;
 
-      // Customer link to send photos/receipt to Success Computech
-      const custWaUrl = `https://wa.me/919944444834?text=${encodeURIComponent(receiptText)}`;
+      const custWaUrl = `https://wa.me/919944444834?text=${encodeURIComponent(receiptWaText)}`;
       document.getElementById('confCustomerWhatsAppBtn').href = custWaUrl;
       document.getElementById('orderConfirmationModal').classList.remove('hidden');
-
-      // 2. Automated Admin Notification Message (Triggered to Admin Phone 919944444834)
-      const adminNoticeText = `🚨 *NEW CUSTOMER ORDER RECEIVED* 🚨\n\n` +
-        `*Order ID:* #${orderData.order_code}\n` +
-        `*Customer:* ${orderData.customer_name}\n` +
-        `*Mobile:* ${orderData.customer_phone}\n` +
-        `*Address:* ${orderData.delivery_address}\n` +
-        `*Amount:* ₹${orderData.total_amount} (${orderData.payment_status || 'Pending'})\n` +
-        (orderData.payment_id ? `*Payment ID:* ${orderData.payment_id}\n` : '') +
-        `\n*Items:*\n` +
-        orderData.items.map((it, i) => `${i+1}. ${it.title} (₹${it.price})` + (it.customName ? ` [Name: ${it.customName}]` : '')).join('\n') +
-        `\n\n👉 View Admin Dashboard: https://successcomputech.in/admin.html`;
-
-      console.log('Dual Notification Prepared: Admin Notice & Customer Confirmation');
     }
 
     function closeOrderConfirmationModal() {
       document.getElementById('orderConfirmationModal').classList.add('hidden');
     }
 
+    // =========================================================================
+    // CHECKOUT FLOWS WITH EMAIL + DUAL CONFIRMATIONS
+    // =========================================================================
+    async function quickBuyNowRazorpay(productId) {
+      const p = state.products.find(item => item.id == productId);
+      if (!p) return;
+
+      if (!currentCustomer || !currentCustomer.email) {
+        openCustomerLoginModal(() => quickBuyNowRazorpay(productId));
+        return;
+      }
+
+      const custName = currentCustomer.name;
+      const custEmail = currentCustomer.email;
+      const custPhone = currentCustomer.phone || '9944444834';
+      const address = currentCustomer.address || 'Tiruppur Home Delivery';
+
+      const total = Number(p.price);
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_51b8e19c63d726e';
+
+      const options = {
+        key: rzpKey,
+        amount: total * 100,
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for " + p.title,
+        image: p.image || "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=120&q=80",
+        prefill: {
+          name: custName,
+          email: custEmail,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
+
+          const orderRecord = {
+            order_code: orderCode,
+            customer_name: custName,
+            customer_email: custEmail,
+            customer_phone: custPhone,
+            delivery_address: address,
+            items: [{ title: p.title, price: p.price, quantity: 1 }],
+            total_amount: total,
+            status: 'Payment Received (₹' + total + ' via Razorpay)',
+            payment_id: paymentId,
+            payment_status: 'Paid'
+          };
+
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('orders').insert([orderRecord]);
+            } catch (e) { console.warn('Supabase insert fallback', e); }
+          }
+
+          triggerDualOrderConfirmation(orderRecord);
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message);
+      }
+    }
+
+    async function payOnlineFromModal() {
+      if (!state.currentSelectedProduct) return;
+      const p = state.currentSelectedProduct;
+
+      if (!currentCustomer || !currentCustomer.email) {
+        openCustomerLoginModal(() => payOnlineFromModal());
+        return;
+      }
+
+      const customName = document.getElementById('custNameInput').value.trim() || currentCustomer.name;
+      const customSong = document.getElementById('custSongInput').value.trim() || 'Not specified';
+      const customNote = document.getElementById('custNoteInput').value.trim() || 'None';
+
+      const custName = currentCustomer.name;
+      const custEmail = currentCustomer.email;
+      const custPhone = currentCustomer.phone || '9944444834';
+      const address = currentCustomer.address || 'Custom Delivery Order';
+
+      const total = Number(p.price);
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_51b8e19c63d726e';
+
+      const options = {
+        key: rzpKey,
+        amount: total * 100,
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for " + p.title,
+        image: p.image,
+        prefill: {
+          name: custName,
+          email: custEmail,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
+
+          const orderRecord = {
+            order_code: orderCode,
+            customer_name: custName,
+            customer_email: custEmail,
+            customer_phone: custPhone,
+            delivery_address: address,
+            items: [{ title: p.title, price: p.price, customName, customSong, customNote }],
+            total_amount: total,
+            status: 'Payment Received (₹' + total + ' via Razorpay)',
+            payment_id: paymentId,
+            payment_status: 'Paid'
+          };
+
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('orders').insert([orderRecord]);
+            } catch (e) { console.warn('Order log fallback', e); }
+          }
+
+          closeProductModal();
+          triggerDualOrderConfirmation(orderRecord);
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message);
+      }
+    }
+
+    async function directOrderWhatsAppFromModal() {
+      if (!state.currentSelectedProduct) return;
+      const p = state.currentSelectedProduct;
+
+      if (!currentCustomer || !currentCustomer.email) {
+        openCustomerLoginModal(() => directOrderWhatsAppFromModal());
+        return;
+      }
+
+      const customName = document.getElementById('custNameInput').value.trim() || currentCustomer.name;
+      const customSong = document.getElementById('custSongInput').value.trim() || 'Not specified';
+      const customNote = document.getElementById('custNoteInput').value.trim() || 'None';
+      const custEmail = currentCustomer.email;
+      const custPhone = currentCustomer.phone || '9944444834';
+      const address = currentCustomer.address || 'Tiruppur Store Delivery';
+
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+
+      const orderRecord = {
+        order_code: orderCode,
+        customer_name: customName,
+        customer_email: custEmail,
+        customer_phone: custPhone,
+        delivery_address: address,
+        items: [ { title: p.title, price: p.price, customName, customSong, customNote } ],
+        total_amount: Number(p.price),
+        status: 'Order Placed (WhatsApp)',
+        payment_status: 'Pending'
+      };
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([orderRecord]);
+        } catch (e) { console.warn('Supabase order log skipped', e); }
+      }
+
+      closeProductModal();
+      triggerDualOrderConfirmation(orderRecord);
+    }
+
+    async function completeCheckout() {
+      if (state.cart.length === 0) {
+        alert('Your cart is empty. Please add gifts first!');
+        return;
+      }
+
+      // Check if email field filled or customer logged in
+      const emailInput = document.getElementById('orderCustomerEmail');
+      let custEmail = emailInput ? emailInput.value.trim().toLowerCase() : '';
+
+      if (!custEmail && currentCustomer && currentCustomer.email) {
+        custEmail = currentCustomer.email;
+      }
+
+      if (!custEmail || !custEmail.includes('@')) {
+        openCustomerLoginModal(() => completeCheckout());
+        return;
+      }
+
+      const nameInput = document.getElementById('orderCustomerName');
+      const custName = (nameInput && nameInput.value.trim()) || (currentCustomer && currentCustomer.name) || 'Valued Customer';
+      const phoneInput = document.getElementById('orderCustomerPhone');
+      const custPhone = (phoneInput && phoneInput.value.trim()) || (currentCustomer && currentCustomer.phone) || '9944444834';
+      const addrInput = document.getElementById('orderDeliveryAddress');
+      const address = (addrInput && addrInput.value.trim()) || (currentCustomer && currentCustomer.address) || 'Tiruppur Delivery';
+
+      // Update current customer session
+      if (!currentCustomer) {
+        currentCustomer = { name: custName, email: custEmail, phone: custPhone, address: address };
+        localStorage.setItem('sc_customer_user', JSON.stringify(currentCustomer));
+        renderCustomerHeaderWidget();
+      }
+
+      let total = 0;
+      state.cart.forEach(item => {
+        total += Number(item.price);
+      });
+
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+
+      const orderRecord = {
+        order_code: orderCode,
+        customer_name: custName,
+        customer_email: custEmail,
+        customer_phone: custPhone,
+        delivery_address: address,
+        items: state.cart,
+        total_amount: total,
+        status: 'Order Placed (Cart)',
+        payment_status: 'Pending'
+      };
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('orders').insert([orderRecord]);
+        } catch (e) { console.warn('Order save fallback', e); }
+      }
+
+      state.cart = [];
+      localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
+      updateCartBadge();
+      toggleCartDrawer();
+
+      triggerDualOrderConfirmation(orderRecord);
+    }
+
+    async function payWithRazorpay() {
+      if (state.cart.length === 0) {
+        alert('Your cart is empty. Please add custom gifts first!');
+        return;
+      }
+
+      const emailInput = document.getElementById('orderCustomerEmail');
+      let custEmail = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      if (!custEmail && currentCustomer && currentCustomer.email) {
+        custEmail = currentCustomer.email;
+      }
+
+      if (!custEmail || !custEmail.includes('@')) {
+        openCustomerLoginModal(() => payWithRazorpay());
+        return;
+      }
+
+      const custName = document.getElementById('orderCustomerName').value.trim() || (currentCustomer && currentCustomer.name) || 'Valued Customer';
+      const custPhone = document.getElementById('orderCustomerPhone').value.trim() || (currentCustomer && currentCustomer.phone) || '9944444834';
+      const address = document.getElementById('orderDeliveryAddress').value.trim() || (currentCustomer && currentCustomer.address) || 'Tiruppur Home Delivery';
+
+      let total = 0;
+      state.cart.forEach(item => {
+        total += Number(item.price);
+      });
+
+      const orderCode = 'SC-' + Math.floor(100000 + Math.random() * 900000);
+      const rzpKey = (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.razorpayKeyId && !SUPABASE_CONFIG.razorpayKeyId.includes('YOUR_KEY')) 
+        ? SUPABASE_CONFIG.razorpayKeyId 
+        : 'rzp_test_51b8e19c63d726e';
+
+      const options = {
+        key: rzpKey,
+        amount: total * 100,
+        currency: "INR",
+        name: state.settings.brand_name || "Success Computech",
+        description: "Payment for Order #" + orderCode,
+        image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=120&q=80",
+        prefill: {
+          name: custName,
+          email: custEmail,
+          contact: custPhone
+        },
+        theme: {
+          color: "#e11d48"
+        },
+        handler: async function (response) {
+          const paymentId = response.razorpay_payment_id;
+
+          const orderRecord = {
+            order_code: orderCode,
+            customer_name: custName,
+            customer_email: custEmail,
+            customer_phone: custPhone,
+            delivery_address: address,
+            items: state.cart,
+            total_amount: total,
+            status: 'Payment Received (₹' + total + ' via Razorpay)',
+            payment_id: paymentId,
+            payment_status: 'Paid'
+          };
+
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('orders').insert([orderRecord]);
+            } catch (e) {
+              console.warn('Order database logging fallback', e);
+            }
+          }
+
+          state.cart = [];
+          localStorage.setItem('sc_public_cart', JSON.stringify(state.cart));
+          updateCartBadge();
+          toggleCartDrawer();
+
+          triggerDualOrderConfirmation(orderRecord);
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        alert('Could not open Razorpay checkout: ' + err.message);
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => { initCustomerSession(); initStorefront(); });
   </script>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: CUSTOMER MOBILE NUMBER LOGIN / OTP -->
-  <!-- ========================================================================= -->
-  <div id="customerLoginModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl p-6 relative animate-fade-in">
-      <button onclick="closeCustomerLoginModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="text-center mb-5">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-rose-400 flex items-center justify-center text-white text-xl mx-auto mb-3 shadow-md shadow-rose-200">
-          <i class="fa-solid fa-mobile-screen"></i>
-        </div>
-        <h3 class="text-lg font-black text-gray-900">Customer Mobile Login</h3>
-        <p class="text-xs text-gray-500 mt-1">Sign in with your 10-digit mobile number to track orders and checkout faster</p>
-      </div>
-
-      <!-- Step 1: Mobile & Name Form -->
-      <form id="custLoginForm" onsubmit="handleCustomerLoginSubmit(event)" class="space-y-3.5 text-xs">
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Your Full Name</label>
-          <input type="text" id="custLoginName" placeholder="e.g. Anand" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:bg-white" required />
-        </div>
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">10-Digit Mobile Number</label>
-          <div class="flex">
-            <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl text-gray-500 font-bold">+91</span>
-            <input type="tel" id="custLoginPhone" maxlength="10" placeholder="9876543210" pattern="[0-9]{10}" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-r-xl focus:ring-2 focus:ring-brand-500 focus:bg-white font-semibold" required />
-          </div>
-        </div>
-
-        <div>
-          <label class="font-bold text-gray-700 block mb-1">Delivery Address (Optional)</label>
-          <input type="text" id="custLoginAddress" placeholder="Street, City, Pincode" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:bg-white" />
-        </div>
-
-        <div id="otpInputSection" class="hidden space-y-2 pt-2 border-t border-gray-100">
-          <div class="flex items-center justify-between">
-            <label class="font-bold text-gray-700 block">Enter 4-Digit OTP</label>
-            <span class="text-[10px] text-emerald-600 font-bold">Code sent! (Demo: 1234)</span>
-          </div>
-          <input type="text" id="custOtpInput" maxlength="4" placeholder="1234" class="w-full p-2.5 text-center tracking-widest text-lg font-black bg-rose-50 border border-brand-300 rounded-xl focus:ring-2 focus:ring-brand-500" />
-        </div>
-
-        <button type="submit" id="custLoginSubmitBtn" class="w-full py-3 bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-700 hover:to-rose-700 text-white font-extrabold rounded-xl shadow-lg shadow-rose-200 transition">
-          Continue with Mobile
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: MY ORDERS (TRACK BY CUSTOMER MOBILE) -->
-  <!-- ========================================================================= -->
-  <div id="myOrdersModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl p-6 relative max-h-[85vh] flex flex-col animate-fade-in">
-      <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-        <div>
-          <h3 class="text-lg font-black text-gray-900 flex items-center gap-2">
-            <i class="fa-solid fa-boxes-packing text-brand-600"></i> My Orders
-          </h3>
-          <p class="text-xs text-gray-500" id="myOrdersSubtitle">Orders placed with this mobile number</p>
-        </div>
-        <button onclick="closeMyOrdersModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div id="myOrdersList" class="flex-1 overflow-y-auto py-4 space-y-3">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: ORDER CONFIRMATION & RECEIPT MODAL -->
-  <!-- ========================================================================= -->
-  <div id="orderConfirmationModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl p-6 text-center animate-fade-in">
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl shadow-md shadow-emerald-100">
-        <i class="fa-solid fa-check"></i>
-      </div>
-      <h3 class="text-xl font-black text-gray-900">Order Confirmed!</h3>
-      <p class="text-xs text-gray-500 mt-0.5">Success Computech, Tiruppur</p>
-      
-      <div class="bg-gray-50 rounded-2xl p-4 my-4 text-left text-xs space-y-2 border border-gray-200">
-        <div class="flex justify-between font-bold">
-          <span class="text-gray-500">Order Code:</span>
-          <span class="text-brand-600 font-black text-sm" id="confOrderCode">SC-000000</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Customer:</span>
-          <span class="font-bold text-gray-800" id="confCustName">-</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Mobile:</span>
-          <span class="font-bold text-gray-800" id="confCustPhone">-</span>
-        </div>
-        <div class="flex justify-between border-t border-gray-200 pt-2 font-black text-sm">
-          <span>Amount:</span>
-          <span class="text-emerald-600 font-extrabold" id="confTotalAmount">₹0</span>
-        </div>
-      </div>
-
-      <p class="text-xs text-gray-600 mb-4 leading-relaxed">
-        🎉 A confirmation notification has been prepared for your phone. Send your photos on WhatsApp to start customization!
-      </p>
-
-      <div class="space-y-2">
-        <a id="confCustomerWhatsAppBtn" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition">
-          <i class="fa-brands fa-whatsapp text-lg"></i>
-          <span>Send Photos on WhatsApp Now</span>
-        </a>
-        <button onclick="closeOrderConfirmationModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">
-          Done & Close
-        </button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>

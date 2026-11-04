@@ -840,7 +840,7 @@
     }
 
     // Orders Management
-        function renderOrderTable() {
+            function renderOrderTable() {
       const tbody = document.getElementById('adminOrderTable');
       if (!adminState.orders || adminState.orders.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-400">
@@ -855,6 +855,7 @@
         const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : (o.date || 'Recent');
         const items = Array.isArray(o.items) ? o.items : [];
         const custPhone = o.customer_phone || o.phone || '';
+        const custEmail = o.customer_email || o.email || '';
         const cleanPhone = custPhone.replace(/[^0-9]/g, '');
         const isPaid = (o.payment_status === 'Paid' || (o.status && o.status.includes('Payment Received')));
 
@@ -868,6 +869,11 @@
             </td>
             <td class="py-3.5 px-4">
               <p class="font-bold text-gray-900">${o.customer_name || o.customerName || 'Customer'}</p>
+              ${custEmail ? `
+                <a href="mailto:${custEmail}?subject=Regarding Order ${o.order_code} - Success Computech" class="text-[11px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 mt-0.5" title="Click to Email Customer">
+                  <i class="fa-solid fa-envelope text-[10px]"></i> ${custEmail}
+                </a>
+              ` : '<span class="text-[10px] text-gray-400">No email</span>'}
               <p class="font-extrabold text-emerald-600 text-[11px] flex items-center gap-1 mt-0.5">
                 <i class="fa-solid fa-phone text-[9px]"></i> +91 ${custPhone}
               </p>
@@ -905,11 +911,16 @@
               </select>
             </td>
             <td class="py-3.5 px-4 text-right space-x-1">
+              ${custEmail ? `
+                <a href="mailto:${custEmail}?subject=Update on your Order ${o.order_code} - Success Computech" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 transition" title="Send Email to Customer">
+                  <i class="fa-solid fa-envelope text-xs"></i>
+                </a>
+              ` : ''}
               ${cleanPhone ? `
                 <a href="https://wa.me/91${cleanPhone}?text=Hello%20${encodeURIComponent(o.customer_name || 'Customer')},%20regarding%20your%20order%20${o.order_code}%20at%20Success%20Computech..." target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition" title="Message Customer on WhatsApp">
                   <i class="fa-brands fa-whatsapp text-sm"></i>
                 </a>
-                <a href="tel:+91${cleanPhone}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 transition" title="Call Customer">
+                <a href="tel:+91${cleanPhone}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition" title="Call Customer">
                   <i class="fa-solid fa-phone text-xs"></i>
                 </a>
               ` : '<span class="text-gray-400">—</span>'}

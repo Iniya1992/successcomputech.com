@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
 -- Ensure payment columns exist on orders
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_id TEXT DEFAULT '';
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'Pending';
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS customer_email TEXT DEFAULT '';
 
 -- 3. Create Store Settings Table
 CREATE TABLE IF NOT EXISTS public.store_settings (
